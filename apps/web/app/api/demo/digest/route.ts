@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // TODO: Call LLM to generate digest with current locale
+    // Digest generation via LLM (placeholder for v0.2 - using deterministic mock)
     const locale = body.uiPreference?.locale || 'zh-CN';
 
     const mockDigest: DigestReport = {

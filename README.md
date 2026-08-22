@@ -2,6 +2,8 @@
 
 > Your Read-only AI Inbox Triage
 
+* [中文版 README](README_CN.md) | [Agent 行为规范](AGENTS.md)
+
 MailMind helps busy professionals quickly understand and prioritize their email without the risk of accidental sends, deletions, or modifications.
 
 ## Features

@@ -37,10 +37,10 @@ function App() {
     setError(null);
 
     try {
-      const result = await invoke<any>('sync_emails', {
+      const result = await invoke<any>('query_feed', {
         accountId: 'demo',
-        password: '',
-        maxEmails: 10,
+        limit: 10,
+        offset: 0,
       });
 
       const mappedCards: EmailCardViewModel[] = (result.emails || []).map((e: any) => ({

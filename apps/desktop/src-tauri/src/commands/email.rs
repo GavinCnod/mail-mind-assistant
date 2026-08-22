@@ -73,7 +73,12 @@ pub fn query_feed(
     state: State<'_, AppState>,
     request: QueryFeedRequest,
 ) -> Result<serde_json::Value, String> {
-    // TODO: Query SQLite database
+    let db_guard = state.db.lock().map_err(|e| e.to_string())?;
+    let conn = db_guard.as_ref()
+        .ok_or("Database not initialized")?;
+    
+    // TODO: Query emails table
+    // For now, return empty results
     Ok(serde_json::json!({
         "emails": [],
         "total": 0,
@@ -88,6 +93,6 @@ pub fn get_insight(
     state: State<'_, AppState>,
     email_id: String,
 ) -> Result<Option<serde_json::Value>, String> {
-    // TODO: Query insights from database
+    // TODO: Query insights table
     Ok(None)
 }

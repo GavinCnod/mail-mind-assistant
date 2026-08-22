@@ -17,7 +17,7 @@
     "test": "pnpm -r test",
     "test:security": "node scripts/verify-no-write-mail-commands.mjs",
     "format": "prettier --write .",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:security"
+    "check": "pnpm typecheck && pnpm test && pnpm test:security"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.11.4",

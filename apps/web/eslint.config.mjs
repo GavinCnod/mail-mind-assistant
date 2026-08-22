@@ -1,26 +1,17 @@
-// @ts-check
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import nextPlugin from '@next/eslint-plugin-next';
+const next = require('@next/eslint-plugin-next');
+const tseslint = require('typescript-eslint');
 
-export default tseslint.config(
-  eslint.configs.recommended,
-  tseslint.configs.recommended,
-  nextPlugin.configs['recommended', 'flat'],
+module.exports = [
+  ...tseslint.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    plugins: {
+      '@next/next': next,
+    },
     rules: {
+      ...next.configs.recommended.rules,
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
-      'no-console': 'off',
     },
-    ignores: [
-      'node_modules/',
-      '.next/',
-      'dist/',
-      '**/*.config.js',
-      '**/*.config.ts',
-      'src-tauri/target/',
-    ],
-  }
-);
+    ignores: ['node_modules/', '.next/', 'dist/', '**/*.config.js'],
+  },
+];

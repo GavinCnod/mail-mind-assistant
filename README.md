@@ -2,33 +2,59 @@
 
 > Your Read-only AI Inbox Triage
 
-* [中文版 README](README_CN.md) | [Agent 行为规范](AGENTS.md)
+* [中文版 README](README_CN.md) | [Agent 行为规范](AGENTS.md) | [Security Policy](docs/SECURITY.md)
 
 MailMind helps busy professionals quickly understand and prioritize their email without the risk of accidental sends, deletions, or modifications.
 
-## Features
-
-- ✉️ **Read-only access** - MailMind can never send, delete, or modify your emails
-- 🤖 **AI-powered triage** - Smart summarization and prioritization
-- 🔒 **Privacy-first** - Zero persistence in web mode, local-only in desktop mode
-- 🌙 **Dark/Light themes** - Comfortable viewing in any environment
-- 🌐 **Bilingual** - Support for Indonesian (Bahasa) and English
-- ⚡ **Streaming analysis** - See results as they're processed
-
-## Architecture
+## Architecture Overview
 
 ```
-mailmind/
-├── apps/
-│   ├── web/              # Next.js web experience (BFF + streaming API)
-│   └── desktop/          # Tauri 2 desktop app (SQLite + local storage)
-├── packages/
-│   ├── contracts/        # Shared Zod schemas and TypeScript types
-│   ├── i18n/             # Internationalization (zh-CN, en)
-│   ├── ui/               # Shared React components
-│   ├── fixtures/         # Test email samples
-│   └── tsconfig/         # Shared TypeScript configurations
-└── docs/                 # Documentation
+┌─────────────────────────────────────────────────────────────────┐
+│                         User                                     │
+└─────────────────────┬───────────────────────────────────────────┘
+                      │
+         ┌────────────┴────────────┐
+         │                         │
+         ▼                         ▼
+┌─────────────────┐       ┌─────────────────┐
+│   Web App       │       │   Desktop App   │
+│  (Next.js 15)   │       │   (Tauri 2)     │
+└────────┬────────┘       └────────┬────────┘
+         │                         │
+         └────────────┬────────────┘
+                      │
+         ┌────────────┴────────────┐
+         │    Shared Packages      │
+         │                         │
+         │  ┌──────────────────┐   │
+         │  │ contracts/       │   │
+         │  │ (Zod schemas)    │   │
+         │  └──────────────────┘   │
+         │  ┌──────────────────┐   │
+         │  │ i18n/            │   │
+         │  │ (zh-CN, en)      │   │
+         │  └──────────────────┘   │
+         │  ┌──────────────────┐   │
+         │  │ ui/              │   │
+         │  │ (React comps)    │   │
+         │  └──────────────────┘   │
+         └─────────────────────────┘
+                      │
+         ┌────────────┴────────────┐
+         │    External Services    │
+         │                         │
+         │  ┌──────────────────┐   │
+         │  │ Email Server     │   │
+         │  │ (IMAP/TLS)       │   │
+         │  └──────────────────┘   │
+         │  ┌──────────────────┐   │
+         │  │ AI Model API     │   │
+         │  │ (OpenAI compat)  │   │
+         │  └──────────────────┘   │
+         │  ┌──────────────────┐   │
+         │  │ SQLite (Desktop) │   │
+         │  └──────────────────┘   │
+         └─────────────────────────┘
 ```
 
 ## Quick Start (Fixture Mode)
@@ -37,8 +63,8 @@ For development and demo purposes, MailMind can run with pre-loaded sample email
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/mailmind.git
-cd mailmind
+git clone https://github.com/GavinCnod/mail-mind-assistant.git
+cd mail-mind-assistant
 
 # Install dependencies
 pnpm install
@@ -86,15 +112,26 @@ pnpm dev:web
 pnpm dev:desktop
 ```
 
+### Supported Email Providers
+
+| Provider | IMAP Host | Port | Notes |
+|----------|-----------|------|-------|
+| Gmail | imap.gmail.com | 993 | App password required |
+| Outlook | outlook.office365.com | 993 | App password required |
+| QQ邮箱 | imap.qq.com | 993 | Enable SMTP/IMAP first |
+| 163邮箱 | imap.163.com | 993 | Authorization code required |
+| Yahoo | imap.mail.yahoo.com | 993 | App password required |
+
 ## Safety Guarantees
 
 MailMind makes these promises:
 
-1. **Read-only access** - We never execute any email write commands
-2. **No credential storage** - Passwords exist only in memory
+1. **Read-only access** - We never execute any email write commands (STORE, APPEND, COPY, EXPUNGE, DELETE, DELE)
+2. **No credential storage** - Passwords exist only in memory during session
 3. **No logging of sensitive data** - API keys and passwords never appear in logs
 4. **Encryption required** - Only TLS/STARTTLS connections are permitted
-5. **Prompt injection defense** - Email content is treated as untrusted data
+5. **Prompt injection defense** - Email content is treated as untrusted data, isolated with XML tags
+6. **Data retention limit** - Maximum 5 days / 500 emails (Desktop mode)
 
 ## Testing
 
@@ -102,14 +139,14 @@ MailMind makes these promises:
 # Run all checks
 pnpm check
 
-# Run type checking
+# Type checking
 pnpm typecheck
 
-# Run linting
-pnpm lint
-
-# Run security scan
+# Security scan
 pnpm test:security
+
+# E2E tests
+node scripts/e2e-test.mjs
 ```
 
 ## Project Structure
@@ -123,6 +160,7 @@ pnpm test:security
 | `packages/ui/` | Shared React UI components |
 | `packages/fixtures/` | Test email samples (.eml files) |
 | `docs/` | Documentation and design specs |
+| `scripts/` | Build and verification scripts |
 
 ## Tech Stack
 
@@ -135,21 +173,32 @@ pnpm test:security
 - **Email:** IMAP/POP3 over TLS
 - **AI:** OpenAI-compatible API
 
+## Security
+
+See [SECURITY.md](docs/SECURITY.md) for detailed security architecture, threat model, and safety guarantees.
+
+Key security features:
+- Zero persistent sessions (Web mode)
+- Local-first storage (Desktop mode)
+- Parameterized SQL queries
+- Prompt injection detection
+- Host validation (SSRF protection)
+
 ## Roadmap
 
 ### Post-Hackathon Features
 - [ ] OAuth support (Gmail, Outlook)
 - [ ] Attachment OCR
-- [ ] Semantic search
+- [ ] Semantic search (Embeddings)
 - [ ] Automatic reply drafts
 - [ ] Calendar integration
 - [ ] RAG-based email history search
 - [ ] macOS Keychain / Windows Credential Manager (P1)
-- [ ] POP3 full implementation
+- [ ] Full POP3 implementation
 
 ## Contributing
 
-Contributions are welcome! Please read our contributing guidelines and submit a pull request.
+Contributions are welcome! Please read our security policy and submit a pull request.
 
 ## License
 

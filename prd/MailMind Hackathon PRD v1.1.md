@@ -1,6 +1,6 @@
-# MailMind Hackathon PRD v1.0
+# MailMind Hackathon PRD v1.1
 
-**文档属性：** 最终版  
+**文档属性：** 最终版（v1.1：新增主题与双语规格）  
 **适用周期：** 4 天黑客松冲刺；前 48 小时完成核心体验闭环  
 **产品名称：** MailMind（暂定）  
 **发布形态：** 公开 Web 体验端 + macOS / Windows 本地桌面端 + 开源仓库
@@ -21,6 +21,7 @@ MailMind 面向“邮件很多、但判断时间很少”的知识工作者、�
 | Desktop 端定位 | 持续使用版本。仅保留最近 5 天、最多 500 封，在本机 SQLite 中维护摘要和产品内处理状态 |
 | 模型 | 可配置 OpenAI-compatible API：Base URL、模型名、API Key |
 | 邮箱接入 | 优先 IMAP；POP3 为兼容适配器；只支持加密连接 |
+| 主题与语言 | Web 与 Desktop 均支持 Light / Dark；仅支持简体中文（`zh-CN`）与英文（`en`），当前界面语言即当前 LLM 输出语言 |
 | 不做的事 | OAuth、发信、删信、改已读、移动邮件、附件 OCR、全量历史、向量检索、自动化回复 |
 | 交付策略 | pnpm 单仓库，共享 schema / 提示词 / UI / fixtures；两端的邮件 I/O 和持久化独立实现 |
 
@@ -50,6 +51,7 @@ MailMind 的价值由三个层次组成。第一层是单封邮件的**压缩与
 | S5 | 本地产品叙事 | Desktop 支持 5 天 / 500 封、产品内 triage 状态和一键删除本地数据 |
 | S6 | 开源可复现 | 新开发者可按 README 以 fixture mode 启动并看到核心 UI；真实邮箱需要显式配置 |
 | S7 | 韧性 | 连接错误、模型错误、单封 MIME 解析错误均给出可行动提示，不泄露敏感字段 |
+| S8 | 个性化与语言一致性 | Web 与 Desktop 均可切换 Light / Dark 和简中 / 英文；新发起的 LLM 调用的自然语言输出与当前界面语言一致 |
 
 Web 与本地端并不是功能重复。Web 体验端是一次性的价值证明：它不建立业务数据库，不提供可按 ID 重新获取的邮件缓存，详情页仅展示同一流式响应中的清洗正文摘录。Desktop 是持续使用版本：它在本机 SQLite 中保留受限范围内的数据，用户可以反复回顾、标记和清除。
 
@@ -62,6 +64,7 @@ Web 与本地端并不是功能重复。Web 体验端是一次性的价值证明
 | 凭证 | 当次请求内存，不持久化 | P0 不落盘；P1 仅存系统安全凭证库 |
 | 原文查看 | 清洗摘录，不提供持久化原文回取接口 | 完整本地正文与元数据 |
 | 产品内状态 | 不保存 | 已处理 / 稍后看 / 忽略；绝不回写邮箱 |
+| 主题与语言偏好 | 仅保存非敏感的 `theme` 与 `locale` 浏览器偏好；不与邮件会话绑定 | 保存到本地 `app_preferences`；不与邮箱凭证或邮件正文混存 |
 
 ## 4. 核心体验与用户流程
 
@@ -88,6 +91,21 @@ flowchart LR
 
 本地端的“删除数据”必须是显式产品能力，而不是隐藏在系统目录的副作用。用户可以删除某个账户的邮件、洞察、报告与凭证引用，或一键清除所有本地数据。清除完成后，UI 显示删除结果；同步和清理需在同一事务策略下进行，避免半删除状态。
 
+### 4.3 Light / Dark 与简中 / 英文：一份偏好，驱动两层体验
+
+主题与语言是 **Web 和 Desktop 共同的 P0 能力**，入口位于全局顶栏右侧，并在体验流程、详情页、设置页和错误页始终可见。首次启动时，系统可根据操作系统或浏览器的偏好解析出初始的 `light` / `dark` 与 `zh-CN` / `en`；用户手动切换后，选择优先于系统偏好。黑客松版本只暴露两个确定主题值 `light` 与 `dark`，而不增加独立的“跟随系统”状态，避免状态同步复杂度。
+
+语言偏好是产品的唯一语言来源。它一方面决定界面文案、日期格式、空状态、错误信息与类别标签；另一方面作为 `output_locale` 注入每一次模型调用，使**新建、重试、重新生成和半日汇总**的自然语言输出与当前界面语言相同。结构化字段的 key 与枚举值保持稳定英文代码，例如 `customer_order`、`P1` 和 `requires_action`；UI 使用翻译字典显示“订单/客户”或 “Customer & order”，从而不会因 LLM 输出语言切换而破坏筛选、排序和统计。
+
+| 偏好 | 支持值 | 默认与持久化 | 对模型的影响 |
+|---|---|---|---|
+| `theme` | `light`、`dark` | 首次从 OS / 浏览器解析；Web 只存非敏感 first-party preference，Desktop 存 `app_preferences` | 无 |
+| `locale` | `zh-CN`、`en` | 首次优先 `zh-CN` 匹配，否则 `en`；用户切换后覆盖初始值 | 每个 LLM request 带 `output_locale`；所有人类可读 value 使用当前语言 |
+
+界面语言切换必须即时生效，且不刷新或丢失当前会话中已展示的邮件。已完成的 AI 洞察携带 `output_locale`，因此在用户切换语言后会保留其生成时的语言，并显示“已按简体中文生成 / Generated in English”标识；这是为了避免在未请求用户同意的情况下重新上传邮件正文。用户可以对单封点击“按当前语言重新生成”，或对当前半日简报点击“重新生成报告”。这两种显式动作才会以新语言重新调用模型。Web 端的 locale / theme cookie 只保存非敏感展示偏好，不削弱“邮件与凭证零留存”的承诺。
+
+主题采用 CSS variables 和语义 token，例如 `canvas`、`surface`、`surface-elevated`、`text-primary`、`text-secondary`、`border-subtle`、`priority-p0`；禁止在业务组件中直接写死浅色十六进制值。P0/P1、错误、成功和置信度都必须结合文字、图标或形状表达，不能仅依赖颜色。Light / Dark 下需验证正文、卡片、筛选 Chips、表单、模态框、焦点环和图表的可读性；切换时不应发生明显闪白或布局跳动。
+
 ## 5. P0 产品需求
 
 | ID | 功能 | 需求描述 | 验收标准 |
@@ -103,10 +121,12 @@ flowchart LR
 | P0-09 | 模型配置 | 支持 OpenAI-compatible Base URL、Model、API Key | 必填校验；Key 脱敏；不写日志 / SQLite |
 | P0-10 | 数据清除 | Web 的结束体验与 Desktop 的一键清除 | 结束后 Web 无可回取缓存；Desktop 删除相关本地数据 |
 | P0-11 | 本地 triage | Desktop 的已处理 / 稍后看 / 忽略 | 仅影响本产品界面，不回写邮箱 |
+| P0-12 | 明暗主题 | Light / Dark 全局切换；同一套语义色彩 token 应用于两端 | 重启、刷新和路由切换后保持选择；无明显闪白；信息不能只靠颜色表达 |
+| P0-13 | 双语与模型语言 | 支持 `zh-CN` / `en`；界面语言是每次 LLM 调用的 `output_locale` | 新分析、重试与简报的自然语言输出与当前 UI 一致；稳定枚举不随语言变化 |
 
 ### 摘要瀑布流规格
 
-卡片的视觉风格可以借鉴内容瀑布流的易扫读特性，但不能变成吸引用户无限滚动的社交流。默认排序是 `priority → deadline → requires_action → received_at`；用户可以切换到纯时间排序。桌面端使用响应式双列，窄屏退化为单列；每个卡片的正文区域必须保持短而有信息密度。
+卡片的视觉风格可以借鉴内容瀑布流的易扫读特性，但不能变成吸引用户无限滚动的社交流。默认排序是 `priority → deadline → requires_action → received_at`；用户可以切换到纯时间排序。桌面端使用响应式双列，窄屏退化为单列；每个卡片的正文区域必须保持短而有信息密度。两种主题均使用同一层级体系与卡片阴影策略，语言切换后卡片必须允许英文文本自然换行，不依赖固定汉字宽度。
 
 | 卡片区域 | 字段 | 约束 |
 |---|---|---|
@@ -128,7 +148,7 @@ flowchart LR
 |---|---|---|---|---|
 | A1 | Ingest | MIME 邮件 | `NormalizedEmail` | 仅解析；失败时仍展示基本元数据 |
 | A2 | Sanitize | HTML / text 正文 | `UntrustedEmailContent` | 移除脚本、样式、追踪像素与隐藏节点；截断长文 |
-| A3 | Classify | 固定系统提示 + 元数据 + 不可信内容 | `EmailInsight` JSON | 只有推理权限；schema 失败时重试一次 |
+| A3 | Classify | 固定系统提示 + 元数据 + 不可信内容 + `output_locale` | `EmailInsight` JSON | 只有推理权限；schema 失败时重试一次；自然语言 value 必须使用当前 UI 语言 |
 | A4 | Rank | 多个已验证 insight | 排序后的卡片模型 | 由确定性代码排序，而非模型自由排序 |
 | A5 | Synthesize | 当前半日的 insight 与元数据 | `DigestReport` JSON | 不上传原文；失败时规则汇总兜底 |
 
@@ -142,6 +162,7 @@ Agent 没有 `send_email`、`delete_email`、`mark_read`、`move_email`、`brows
 {
   "schema_version": "1.0",
   "source_email_id": "local-or-session-id",
+  "output_locale": "zh-CN",
   "one_line_summary": "客户确认样品规格，并要求本周四前回复交付时间。",
   "category": "订单/客户",
   "priority": "P1",
@@ -218,7 +239,7 @@ OWASP 日志建议明确指出，密码、访问令牌和敏感个人数据通�
 
 ### 9.1 双端架构
 
-Web 端采取 Next.js 作为全栈 BFF。浏览器只通过 HTTPS 请求 Next Route Handler；由服务端建立 IMAP / POP3 TLS 连接并调用模型 API，防止把邮箱密码和演示模型 Key 暴露给客户端。Desktop 采用 Tauri 2 + React；高敏感的邮件读取、MIME 解析、SQLite 和 Keychain 操作停留在 Rust command 层，WebView 只调用业务级 command 并呈现 DTO。
+Web 端采取 Next.js 作为全栈 BFF。浏览器只通过 HTTPS 请求 Next Route Handler；由服务端建立 IMAP / POP3 TLS 连接并调用模型 API，防止把邮箱密码和演示模型 Key 暴露给客户端。Desktop 采用 Tauri 2 + React；高敏感的邮件读取、MIME 解析、SQLite 和 Keychain 操作停留在 Rust command 层，WebView 只调用业务级 command 并呈现 DTO。两端的 React 层共享 `ThemeProvider` 与 `LocaleProvider`；Web 在首个 HTML 输出前根据非敏感 cookie 设置 `data-theme`，Desktop 在 UI hydrate 前读取本地 preference，避免主题闪烁。
 
 ```mermaid
 flowchart LR
@@ -267,6 +288,7 @@ Desktop 使用 Rust 驱动 SQLite migration；不向 WebView 开放任意 SQL。
 | `local_triage` | `email_id, state, updated_at` | 仅产品内状态，不回写邮箱 |
 | `consents` | `policy_version, consented_at, scope` | 最小化同意审计 |
 | `sync_runs` | `account_id, status, count, error_code` | 禁止保存完整异常与连接字符串 |
+| `app_preferences` | `key, value, updated_at` | 仅保存 `theme` 与 `locale` 等非敏感 UI 偏好；不保存 secret 或邮件内容 |
 
 同步完成后，在同一事务内先删除 5 天以前的数据，再按 `received_at DESC` 清理第 501 封及之后的邮件，最后限制简报数量。任何一步失败都回滚，避免用户在同步故障时丢失已有数据。
 
@@ -283,7 +305,8 @@ mailmind/
 ├── packages/
 │   ├── contracts/              # Zod、JSON Schema、DTO、stream events
 │   ├── ai-core/                # prompts、output parser、ranking、digest fallback
-│   ├── ui/                     # EmailCard、Feed、Digest、ConsentGate
+│   ├── i18n/                   # zh-CN/en 字典、Locale 类型、格式化与覆盖率测试
+│   ├── ui/                     # EmailCard、Feed、Digest、ConsentGate、ThemeProvider
 │   ├── fixtures/               # 脱敏 .eml、goldens、prompt injection cases
 │   └── tsconfig/
 ├── docs/
@@ -297,13 +320,14 @@ mailmind/
 └── README.md
 ```
 
-共享的应该是领域模型、AI prompt、输出验证、确定性排序、fixture 和纯展示 UI；不应共享邮件 socket、MIME parser、Tauri command、Node Route Handler、SQLite 连接和 Keychain。Node 与 Rust 对网络、TLS 和系统能力的实现边界不同，强行抽象只会提高黑客松风险。
+共享的应该是领域模型、AI prompt、输出验证、确定性排序、fixture、翻译字典、主题 token 和纯展示 UI；不应共享邮件 socket、MIME parser、Tauri command、Node Route Handler、SQLite 连接和 Keychain。`packages/i18n` 提供 `zh-CN` 与 `en` 的同键字典、`Locale` 类型和日期 / 数字格式化器；`packages/ui` 仅使用语义 CSS token，不内嵌中文或英文业务字符串。Node 与 Rust 对网络、TLS 和系统能力的实现边界不同，强行抽象只会提高黑客松风险。
 
 | 包 / 应用 | 允许依赖 | 明确禁止 |
 |---|---|---|
 | `contracts` | Zod、纯 TypeScript | React、Next、Tauri、`fs` / `net`、secrets |
 | `ai-core` | contracts、纯函数 | 网络、数据库、环境变量 |
-| `ui` | React、contracts、Tailwind | Next router、Tauri API、邮件 I/O |
+| `i18n` | 纯 TypeScript、翻译字典、Intl 格式化器 | React、Next、Tauri、邮箱 / 模型 I/O |
+| `ui` | React、contracts、i18n、语义样式 token | Next router、Tauri API、邮件 I/O |
 | `apps/web` | shared packages、Node adapters | Desktop / Rust 代码 |
 | `apps/desktop` | shared packages、Tauri frontend | Web route handlers |
 | `src-tauri` | Rust crates、JSON contract | 任意 WebView SQL |
@@ -314,7 +338,7 @@ mailmind/
 
 ### Day 1：双端 Fixture 体验先站起来
 
-先搭 pnpm 工作区、shared contracts、脱敏 fixture、协议 gate、摘要瀑布流、详情与简报 UI。Web 用 mock SSE 推送，Desktop 用 mock Tauri command；当天结束前，两个端都应能对同一组 fixture 渲染一致的摘要流。不要在 Day 1 接入真实邮箱或模型。
+先搭 pnpm 工作区、shared contracts、`i18n` 双语字典、语义主题 token、脱敏 fixture、协议 gate、摘要瀑布流、详情与简报 UI。Web 用 mock SSE 推送，Desktop 用 mock Tauri command；当天结束前，两个端都应能对同一组 fixture 渲染一致的摘要流。不要在 Day 1 接入真实邮箱或模型。
 
 ### Day 2：锁定 Web 的真实核心闭环
 
@@ -330,7 +354,7 @@ mailmind/
 
 | 里程碑 | 完成时间 | 不可缺失的验收 |
 |---|---|---|
-| M0：工程与视觉骨架 | Day 1 结束 | 同一 fixture 在 Web / Desktop 显示摘要流；consent gate 生效 |
+| M0：工程与视觉骨架 | Day 1 结束 | 同一 fixture 在 Web / Desktop 的 Light / Dark 与简中 / 英文下显示摘要流；consent gate 生效 |
 | M1：核心闭环 | Day 2 结束（48 小时） | Web IMAP + 模型 + 逐卡流式摘要 + 半日简报 + session 清除 |
 | M2：本地叙事 | Day 3 结束 | SQLite、5 天 / 500 封、triage、purge、至少一端打包或可构建 |
 | M3：发布级 Demo | Day 4 结束 | 公网 Web、开源仓库、演示邮箱、README、录屏、Q&A |
@@ -371,7 +395,7 @@ README 必须包含：三分钟 fixture mode 启动方式、真实邮箱接入�
 |---|---|
 | 隐私 | 协议 gate、生效的 TLS 限制、无 Web 持久邮件缓存、清除流程验证 |
 | Secret hygiene | `.env`、SQLite、日志、Git 历史不含真实 secret、真实邮箱或原始客户邮件 |
-| 产品 | 真实或 fixture mode 可完整体验摘要流、详情、简报和清除 |
+| 产品 | 真实或 fixture mode 可完整体验摘要流、详情、简报、清除、Light / Dark 与简中 / 英文切换；新 LLM 调用使用当前 UI 语言 |
 | 工程 | `pnpm install --frozen-lockfile && pnpm check` 通过；lockfile 已提交 |
 | 开源 | README、LICENSE、`.env.example`、`.gitignore`、PRIVACY.md、SECURITY.md 完整 |
 | 演示 | 测试邮箱可登录，90 秒备份视频、5 分钟与 90 秒讲稿就绪 |
@@ -380,7 +404,7 @@ README 必须包含：三分钟 fixture mode 启动方式、真实邮箱接入�
 
 产品命名可先用 **MailMind: Your Read-only AI Inbox Triage**。评审叙事应始终保持一致：传统邮件工具的风险是给 AI 过多权限；MailMind 则用有限读取、结构化输出、无写工具、显式同意和可删除数据，将 Agent 的能力压缩到“理解与建议”这一可信区间。
 
-最后 48 小时不再新增 OAuth、附件 OCR、全量同步、第三方任务管理、复杂 RAG、语义搜索或自动回复。它们都可以作为赛后 roadmap，但每一项都会显著扩大权限、隐私或兼容性范围。黑客松的最佳成果是一个小而完整、可解释、可以真实跑通且可恢复的产品闭环。
+最后 48 小时不再新增 OAuth、附件 OCR、全量同步、第三方任务管理、复杂 RAG、语义搜索、自动回复或第三种主题 / 语言。它们都可以作为赛后 roadmap，但每一项都会显著扩大权限、隐私或兼容性范围。黑客松的最佳成果是一个小而完整、可解释、可以真实跑通且可恢复的产品闭环。
 
 ## 参考资料
 

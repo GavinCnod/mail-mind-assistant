@@ -20,6 +20,7 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:security"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4",
     "@types/mailparser": "^3.4.6",
     "@types/node": "^22.0.0",
     "eslint": "^9.0.0",

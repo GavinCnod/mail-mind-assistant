@@ -1,26 +1,24 @@
 //! MailMind Desktop - Rust Backend
 //!
-//! This module contains the core business logic for the desktop application.
+//! Core business logic for email sync, storage, and AI analysis.
+
+pub mod mail;
+pub mod db;
+pub mod secrets;
+pub mod llm;
+pub mod commands;
 
 /// Application state shared across all Tauri commands
 #[derive(Clone)]
 pub struct AppState {
-    // Will hold database connection and other shared state
+    /// Database connection pool (initialized lazily)
+    pub db: std::sync::Arc<std::sync::Mutex<Option<rusqlite::Connection>>>,
 }
 
 impl Default for AppState {
     fn default() -> Self {
-        Self {}
+        Self {
+            db: std::sync::Arc::new(std::sync::Mutex::new(None)),
+        }
     }
-}
-
-/// Test command to verify the Tauri setup
-#[tauri::command]
-async fn test_connection() -> Result<String, String> {
-    Ok("Connection test successful".to_string())
-}
-
-/// Register all Tauri commands
-pub fn register_commands() -> Vec<tauri::CommandItem> {
-    vec![test_connection()]
 }

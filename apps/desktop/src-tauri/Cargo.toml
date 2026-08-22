@@ -1,5 +1,3 @@
-# MailMind - Rust Dependencies
-
 [package]
 name = "mailmind"
 version = "0.1.0"

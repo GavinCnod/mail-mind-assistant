@@ -1,92 +1,110 @@
 /**
- * POST /api/demo/analyze - One-shot streaming analysis API
- *
- * Accepts consent + connection config, returns SSE stream of email insights.
- * Uses mock fixtures in development; real IMAP adapter in production.
+ * POST /api/demo/analyze — Real IMAP + LLM analysis with SSE streaming
  */
 import { NextResponse } from 'next/server';
-import { FIXTURE_INSIGHTS } from '../../../../lib/server/fixtures';
+import { MailTriageAgent, type TriageOptions } from '../../../../lib/server/triage-agent';
+import { FIXTURE_INSIGHTS, FIXTURE_EMAILS } from '../../../../lib/server/fixtures';
 import { sanitizeContent } from '../../../../lib/server/sanitize-html';
+import type { StreamEvent, EmailCardViewModel, SanitizedEmailDetail } from '@mailmind/contracts';
+
+const encoder = new TextEncoder();
+
+function encodeSSE(event: StreamEvent): string {
+  return `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`;
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    
+
     // Validate consent
     if (!body.consent?.userAgreement || !body.consent?.privacyPolicy || !body.consent?.mailProcessingAuth) {
       return NextResponse.json(
-        { error: 'CONSENT_REQUIRED', message: 'Please complete the consent process first' },
-        { status: 400 }
+        { error: 'CONSENT_REQUIRED' },
+        { status: 400 },
       );
     }
 
-    // In development, use fixtures; in production, connect to real IMAP
-    const isDev = process.env.NODE_ENV === 'development';
-    
-    if (isDev) {
-      return streamFixtureAnalysis(body.uiPreference?.locale || 'zh-CN');
+    const locale = (body.uiPreference?.locale as 'zh-CN' | 'en') ?? 'zh-CN';
+    const maxEmails = Math.min(Math.max(body.maxEmails ?? 5, 1), 10);
+
+    // ── Mode selection ────────────────────────────────────────────────
+    const hasCredentials = !!(
+      body.connection?.host &&
+      body.connection?.username
+    );
+
+    if (!hasCredentials) {
+      return demoModeStream(locale, maxEmails);
     }
 
-    // TODO: Real IMAP connection would go here
-    return NextResponse.json(
-      { error: 'NOT_IMPLEMENTED', message: 'Real IMAP adapter not yet implemented' },
-      { status: 501 }
-    );
+    return realModeStream(body.connection, body.llm, locale, maxEmails);
+
   } catch (error) {
-    console.error('Analyze API error:', error);
+    console.error('[MailMind] Analyze error:', error);
     return NextResponse.json(
-      { error: 'INTERNAL_ERROR', message: 'An internal error occurred' },
-      { status: 500 }
+      { error: 'INTERNAL_ERROR', message: '分析过程中发生错误' },
+      { status: 500 },
     );
   }
 }
 
-async function streamFixtureAnalysis(locale: string) {
-  const encoder = new TextEncoder();
-  
+// ── Demo mode ───────────────────────────────────────────────────────
+
+async function demoModeStream(locale: string, maxEmails: number) {
   const stream = new ReadableStream({
     async start(controller) {
-      // Progress event
-      controller.enqueue(encoder.encode(`event: progress\ndata: ${JSON.stringify({ type: 'progress', stage: 'connecting', message: '正在连接...' })}\n\n`));
-      
-      // Simulate processing time
-      await new Promise(r => setTimeout(r, 500));
-      
-      // Stream each fixture insight
-      for (let i = 0; i < FIXTURE_INSIGHTS.length; i++) {
+      const sendProgress = (stage: string, msg: string) => {
+        controller.enqueue(encoder.encode(encodeSSE({ type: 'progress', stage: stage as any, message: msg })));
+      };
+
+      sendProgress('connecting', locale === 'zh-CN' ? '演示模式：使用示例邮件数据...' : 'Demo mode: using sample emails...');
+      await sleep(300);
+
+      for (let i = 0; i < FIXTURE_EMAILS.length && i < maxEmails; i++) {
+        sendProgress('parsing', `${locale === 'zh-CN' ? '解析' : 'Parsing'} ${i + 1}/${FIXTURE_EMAILS.length}...`);
+        await sleep(200);
+
         const insight = FIXTURE_INSIGHTS[i];
-        
-        // Progress update
-        controller.enqueue(encoder.encode(`event: progress\ndata: ${JSON.stringify({ type: 'progress', stage: 'classifying', message: `正在分析第 ${i + 1}/${FIXTURE_INSIGHTS.length} 封...` })}\n\n`));
-        
-        await new Promise(r => setTimeout(r, 300));
-        
-        // Email card event
-        const card = {
-          ...insight,
-          senderName: '测试用户',
-          senderDomain: 'example.com',
-          receivedAt: new Date().toISOString(),
+        const email = FIXTURE_EMAILS[i];
+
+        const card: EmailCardViewModel = {
+          senderName: email.from.name,
+          senderDomain: email.from.email.split('@')[1] || '',
+          receivedAt: new Date(email.date).toISOString(),
           hasAttachments: false,
-          subject: '测试邮件主题',
+          subject: email.subject,
+          schemaVersion: '1.1',
+          outputLocale: insight.outputLocale,
+          oneLineSummary: insight.oneLineSummary,
+          category: insight.category as any,
+          priority: insight.priority as any,
+          requiresAction: insight.requiresAction,
+          suggestedActions: insight.suggestedActions,
+          keyFacts: insight.keyFacts,
+          deadline: insight.deadline,
+          riskFlags: insight.riskFlags,
+          confidence: insight.confidence,
+          needsHumanReview: insight.needsHumanReview,
         };
-        
-        const detail = {
-          from: 'test@example.com',
-          to: ['user@example.com'],
-          subject: '测试邮件主题',
-          receivedAt: new Date().toISOString(),
-          bodyTextExcerpt: sanitizeContent(`这是一封测试邮件正文，用于演示 MailMind 的分诊能力。${' '.repeat(100)}`),
+
+        const detail: SanitizedEmailDetail = {
+          from: email.from.email,
+          to: [email.from.email],
+          subject: email.subject,
+          receivedAt: new Date(email.date).toISOString(),
+          bodyTextExcerpt: sanitizeContent(email.body, 1500),
           hasAttachments: false,
           attachmentCount: 0,
         };
-        
-        controller.enqueue(encoder.encode(`event: email\ndata: ${JSON.stringify({ type: 'email', card, detail })}\n\n`));
+
+        controller.enqueue(encoder.encode(encodeSSE({ type: 'email', card, detail })));
       }
-      
-      // Completion event
-      controller.enqueue(encoder.encode(`event: completed\ndata: ${JSON.stringify({ type: 'completed', insights: FIXTURE_INSIGHTS })}\n\n`));
-      
+
+      sendProgress('completed', locale === 'zh-CN' ? '分析完成' : 'Analysis complete');
+      await sleep(100);
+
+      controller.enqueue(encoder.encode(encodeSSE({ type: 'completed', insights: FIXTURE_INSIGHTS })));
       controller.close();
     },
   });
@@ -98,4 +116,119 @@ async function streamFixtureAnalysis(locale: string) {
       'Connection': 'keep-alive',
     },
   });
+}
+
+// ── Real mode ───────────────────────────────────────────────────────
+
+async function realModeStream(
+  connection: { host: string; port: number; encryption: string; username: string; password?: string },
+  llm: { baseUrl: string; apiKey: string; model: string } | undefined,
+  locale: string,
+  maxEmails: number,
+) {
+  const agent = new MailTriageAgent(
+    {
+      protocol: 'imap',
+      host: connection.host,
+      port: connection.port,
+      encryption: connection.encryption as 'ssl' | 'starttls',
+      username: connection.username,
+    },
+    connection.password || '',
+    llm ? {
+      baseUrl: llm.baseUrl,
+      apiKey: llm.apiKey,
+      model: llm.model,
+    } : undefined,
+    { locale: locale as 'zh-CN' | 'en', maxEmails },
+  );
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      const progressCallback = (stage: string, message: string) => {
+        controller.enqueue(encoder.encode(encodeSSE({ type: 'progress', stage: stage as any, message })));
+      };
+
+      try {
+        const results = await agent.runWithProgress(progressCallback);
+
+        const emails = results.emails || [];
+        for (let i = 0; i < emails.length; i++) {
+          const email = emails[i];
+          const insight = (results.insights as Record<string, unknown>[])?.[i] ?? {};
+
+          const card: EmailCardViewModel = {
+            senderName: email.from || 'Unknown',
+            senderDomain: email.fromEmail?.split('@')[1] || '',
+            receivedAt: email.receivedAt.toISOString(),
+            hasAttachments: email.hasAttachments,
+            subject: email.subject,
+            schemaVersion: '1.1',
+            outputLocale: (insight.outputLocale as 'zh-CN' | 'en') ?? locale as 'zh-CN' | 'en',
+            oneLineSummary: (insight.oneLineSummary as string) || email.subject || '',
+            category: (insight.category as string) || 'other' as any,
+            priority: (insight.priority as string) || 'P3' as any,
+            requiresAction: !!insight.requiresAction,
+            suggestedActions: (insight.suggestedActions as any[]) || [],
+            keyFacts: (insight.keyFacts as any[]) || [],
+            deadline: insight.deadline ? {
+              value: (insight.deadline as any).value,
+              source: (insight.deadline as any).source,
+              confidence: (insight.deadline as any).confidence,
+            } : null,
+            riskFlags: (insight.riskFlags as string[]) || [],
+            confidence: (insight.confidence as number) ?? 0.5,
+            needsHumanReview: !!insight.needsHumanReview,
+          };
+
+          const detail: SanitizedEmailDetail = {
+            from: email.from,
+            to: [],
+            subject: email.subject,
+            receivedAt: email.receivedAt.toISOString(),
+            bodyTextExcerpt: email.sanitizedExcerpt,
+            hasAttachments: email.hasAttachments,
+            attachmentCount: email.attachmentCount,
+          };
+
+          controller.enqueue(encoder.encode(encodeSSE({ type: 'email', card, detail })));
+        }
+
+        controller.enqueue(encoder.encode(encodeSSE({ type: 'completed', insights: results.insights as any })));
+
+      } catch (error) {
+        const errorCode = error instanceof Error ? error.message : 'UNKNOWN_ERROR';
+        controller.enqueue(encoder.encode(encodeSSE({
+          type: 'error',
+          code: errorCode as any,
+          retryable: true,
+          safeMessage: getSafeErrorMessage(errorCode, locale),
+        })));
+      } finally {
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    },
+  });
+}
+
+function getSafeErrorMessage(code: string, locale: string): string {
+  const messages: Record<string, Record<string, string>> = {
+    AUTH_FAILED: { 'zh-CN': '身份验证失败，请检查用户名或应用密码', en: 'Authentication failed, check your username or app password' },
+    TLS_FAILED: { 'zh-CN': 'TLS 连接失败，请检查加密设置', en: 'TLS connection failed, check encryption settings' },
+    UNKNOWN_ERROR: { 'zh-CN': '发生未知错误，请稍后重试', en: 'An unknown error occurred, please try again' },
+  };
+  const key = code || 'UNKNOWN_ERROR';
+  return messages[key]?.[locale] ?? messages[key]?.['en'] ?? 'An error occurred';
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

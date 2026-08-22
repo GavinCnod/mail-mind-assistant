@@ -1,0 +1,10 @@
+@import '../../packages/ui/src/styles/tokens.css';
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+}
+
+#root {
+  min-height: 100vh;
+}

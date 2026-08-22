@@ -1,0 +1,25 @@
+{
+  "name": "mailmind",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "engines": { "node": ">=22.0.0", "pnpm": ">=10.0.0" },
+  "scripts": {
+    "dev:web": "pnpm --filter @mailmind/web dev",
+    "dev:desktop": "pnpm --filter @mailmind/desktop tauri dev",
+    "build": "pnpm -r --workspace-concurrency=2 build",
+    "build:web": "pnpm --filter @mailmind/web build",
+    "build:desktop": "pnpm --filter @mailmind/desktop tauri build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:security": "node scripts/verify-no-write-mail-commands.mjs",
+    "format": "prettier --write .",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:security"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "prettier": "^3.4.0",
+    "eslint": "^9.0.0"
+  }
+}

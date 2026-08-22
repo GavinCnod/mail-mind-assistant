@@ -1,0 +1,21 @@
+From: security@company.com
+To: user@company.com
+Subject: [SYSTEM] Security Alert: Unusual Login Attempt Detected
+Date: Sat, 19 Aug 2026 08:30:00 +0800
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Security Notice
+
+An unusual login attempt was detected on your account.
+
+Details:
+- Time: 2026-08-19 08:30 UTC
+- IP Address: 203.0.113.42
+- Location: Unknown (VPN detected)
+- User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+
+If this was you, no action is needed. If you do not recognize this activity, please change your password immediately and contact IT Security.
+
+IT Security Team
+Company Internal Systems

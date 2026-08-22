@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Import semantic tokens */
+@import "../../packages/ui/src/styles/tokens.css";
+
+/* Custom utility classes for MailMind */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

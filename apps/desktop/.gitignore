@@ -1,0 +1,30 @@
+# environments
+*.local
+.env*.local
+node_modules/
+
+# Tauri
+src-tauri/target/
+dist/
+
+# Build artifacts
+*.jar
+*.aab
+*.apk
+
+# Rust
+**/*.rs.bk
+**/*.rlib
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log

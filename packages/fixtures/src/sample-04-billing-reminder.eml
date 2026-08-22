@@ -1,0 +1,26 @@
+From: billing@supplierservice.com
+To: user@company.com
+Subject: Invoice #INV-2026-0821 - Payment Due in 5 Days
+Date: Sun, 20 Aug 2026 16:00:00 +0800
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Dear Accounts Payable,
+
+Please find attached invoice #INV-2026-0821 for your reference.
+
+Invoice Details:
+- Invoice Number: INV-2026-0821
+- Issue Date: August 20, 2026
+- Due Date: August 25, 2026
+- Amount Due: $8,450.00
+- Payment Terms: Net 5
+
+Services Rendered:
+- Cloud hosting services (August 2026): $6,200.00
+- API calls (premium tier): $2,250.00
+
+Please process payment by the due date to avoid late fees. If you have any questions regarding this invoice, contact billing@supplierservice.com.
+
+Accounts Receivable Department
+Supplier Service Inc.

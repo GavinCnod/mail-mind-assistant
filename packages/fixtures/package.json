@@ -1,0 +1,11 @@
+{
+  "name": "@mailmind/fixtures",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./*.eml": "./src/*.eml"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

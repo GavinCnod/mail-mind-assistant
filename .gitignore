@@ -1,1 +1,57 @@
-/design
+# Editor
+.vscode/**
+!.vscode/extensions.json
+.idea/**
+
+# Dependencies
+node_modules/
+apps/*/node_modules/
+packages/*/node_modules/
+
+# Build
+apps/web/.next/
+apps/web/out/
+apps/desktop/dist/
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/tauri.conf.json.bak
+
+# Environment
+apps/web/.env*
+apps/desktop/.env*
+!apps/web/.env.example
+!apps/desktop/.env.example
+
+# Secrets & Credentials
+*.key
+*.pem
+*.p12
+*.keystore
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database
+*.sqlite
+*.sqlite3
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Tauri
+apps/desktop/src-tauri/capabilities/
+apps/desktop/src-tauri/gen/
+apps/desktop/src-tauri/icons/
+
+# Rust
+**/*.rs.bk

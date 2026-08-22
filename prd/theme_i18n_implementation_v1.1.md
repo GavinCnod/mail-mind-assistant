@@ -122,28 +122,6 @@ Web 体验端为避免保存多版本洞察，可在内存中用 `emailId + outp
 
 主题使用根节点属性 `data-theme="light"` 与 `data-theme="dark"`，由 CSS variables 定义色彩层级。Tailwind utility 或组件 CSS 只能引用语义 token；禁止把 `#ffffff`、`#111827` 之类主题颜色散落在业务组件中。
 
-```css
-:root[data-theme='light'] {
-  --canvas: #f7f8fa;
-  --surface: #ffffff;
-  --surface-elevated: #ffffff;
-  --text-primary: #17191c;
-  --text-secondary: #626a73;
-  --border-subtle: #e3e7eb;
-  --focus-ring: #2563eb;
-}
-
-:root[data-theme='dark'] {
-  --canvas: #101214;
-  --surface: #171a1f;
-  --surface-elevated: #1d2229;
-  --text-primary: #f4f7fa;
-  --text-secondary: #aab3bd;
-  --border-subtle: #313944;
-  --focus-ring: #7db2ff;
-}
-```
-
 优先级、风险和成功状态需在两种主题下使用经过验证的语义颜色，但颜色不能是唯一表达：P0/P1 必须同时有文字优先级、图标与 aria label；错误有明确的标题和说明；置信度应显示数值或“需人工确认”。主题切换前后，卡片尺寸、瀑布流排序和正文布局不得改变。
 
 ### 4.2 首屏无闪烁策略

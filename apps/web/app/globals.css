@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Import semantic tokens */
-@import "../../packages/ui/src/styles/tokens.css";
+@import "../../../packages/ui/src/styles/tokens.css";
 
 /* Custom utility classes for MailMind */
 @layer utilities {

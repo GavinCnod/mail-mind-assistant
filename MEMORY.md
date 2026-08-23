@@ -16,6 +16,12 @@
 - 现有功能完整：ConsentGate → ConnectionForm → Analysis → Digest
 - 切换按钮使用原有 ThemeToggle/LocaleToggle 组件（非自研）
 
+### Git Lock 文件处理教训
+Windows 上 `.git/index.lock` 可能因 TGitCache/OneDrive/explorer 持有句柄而无法删除。遇到时：
+1. 先检查当前 git 状态和 HEAD
+2. 告知用户情况，请求协助处理
+3. 不要循环尝试 `del` / `rm` 等命令
+
 ## Git Lock File Handling (Windows)
 
 **Never loop on `.git/index.lock`.** The lock is held by a process with an open file handle (often TGitCache, explorer, or OneDrive). Standard `del` / `rm` will fail regardless of how many times you try.

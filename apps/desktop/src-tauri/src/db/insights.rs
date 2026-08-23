@@ -1,7 +1,7 @@
 //! Insight storage operations
 
 use rusqlite::{Connection, Result};
-use chrono::{DateTime, Utc};
+use rusqlite::OptionalExtension;
 
 /// Store an email insight
 pub fn store_insight(

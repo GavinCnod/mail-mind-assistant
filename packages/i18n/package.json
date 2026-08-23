@@ -2,13 +2,24 @@
   "name": "@mailmind/i18n",
   "version": "0.1.0",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
+      "default": "./dist/index.js"
     }
   },
-  "dependencies": {},
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@mailmind/contracts": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^5.7.0"
   }

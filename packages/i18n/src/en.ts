@@ -1,4 +1,4 @@
-import { type Locale } from '@mailmind/contracts';
+import type { Locale } from '@mailmind/contracts';
 
 export const en = {
   // ---- Common ----

@@ -1,4 +1,4 @@
-import { type EmailCardViewModel, type Priority, type EmailCategoryCode } from '@mailmind/contracts';
+import { type EmailCardViewModel, type Priority } from '@mailmind/contracts';
 
 export interface EmailCardProps {
   card: EmailCardViewModel;

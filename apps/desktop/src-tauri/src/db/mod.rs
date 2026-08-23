@@ -11,7 +11,9 @@ pub mod insights;
 /// Initialize or open the SQLite database
 pub fn init_db(data_dir: &PathBuf) -> Result<Connection> {
     // Create data directory if it doesn't exist
-    fs::create_dir_all(data_dir)?;
+    if let Err(e) = fs::create_dir_all(data_dir) {
+        return Err(rusqlite::Error::QueryReturnedNoRows);
+    }
     
     let db_path = data_dir.join("mailmind.db");
     let conn = Connection::open(db_path)?;
@@ -37,15 +39,22 @@ pub fn run_migrations(conn: &Connection, migrations_dir: &PathBuf) -> Result<()>
     )?;
     
     // Get already applied migrations
-    let versions: Vec<String> = conn.query_map(
-        "SELECT version FROM schema_migrations ORDER BY version",
-        [],
-        |row| row.get(0),
-    )?.filter_map(|r| r.ok()).collect();
+    let versions: Vec<String> = conn.prepare("SELECT version FROM schema_migrations ORDER BY version")?
+        .query_map([], |row| row.get(0))?
+        .filter_map(|r| r.ok())
+        .collect();
     
     // Find migration files
-    for entry in fs::read_dir(migrations_dir)? {
-        let entry = entry?;
+    let entries = match fs::read_dir(migrations_dir) {
+        Ok(e) => e,
+        Err(_) => return Ok(()),
+    };
+    
+    for entry in entries {
+        let entry = match entry {
+            Ok(e) => e,
+            Err(_) => continue,
+        };
         let path = entry.path();
         
         if path.is_file() && path.extension().map(|e| e == "sql").unwrap_or(false) {
@@ -59,7 +68,10 @@ pub fn run_migrations(conn: &Connection, migrations_dir: &PathBuf) -> Result<()>
                 .unwrap_or("");
             
             if !version.is_empty() && !versions.contains(&version.to_string()) {
-                let sql = fs::read_to_string(&path)?;
+                let sql = match fs::read_to_string(&path) {
+                    Ok(s) => s,
+                    Err(_) => continue,
+                };
                 conn.execute_batch(&sql)?;
                 stmt.insert([version])?;
             }

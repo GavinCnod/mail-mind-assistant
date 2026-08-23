@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+// import React from 'react';
 import { useTheme } from '../providers/ThemeProvider';
 import { useLocale } from '../providers/LocaleProvider';
 

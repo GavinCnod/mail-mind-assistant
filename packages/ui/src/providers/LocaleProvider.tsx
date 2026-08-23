@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { type Locale } from '@mailmind/contracts';
 import { zhCN, en, resolvePreferredLocale } from '@mailmind/i18n';
 import { type LocaleContextValue } from './types';

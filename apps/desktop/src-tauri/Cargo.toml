@@ -12,9 +12,13 @@ tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rusqlite = { version = "0.31", features = ["bundled"] }
-async-imap = "0.14"
+async-imap = "0.11"
 tokio = { version = "1", features = ["full"] }
 reqwest = { version = "0.11", features = ["json"] }
 mailparse = "0.15"
 chrono = { version = "0.4", features = ["serde"] }
 tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+dirs = "5"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }

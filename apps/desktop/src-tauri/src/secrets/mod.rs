@@ -1,5 +1,7 @@
 //! Credential management (P1: OS Keychain, P0: Memory-only)
 
+use std::sync::Mutex;
+
 /// Secret storage trait for different platforms
 pub trait SecretStore {
     /// Save a secret
@@ -15,21 +17,24 @@ pub trait SecretStore {
 /// Memory-only secret store (default, no persistence)
 #[derive(Default)]
 pub struct MemorySecretStore {
-    secrets: std::collections::HashMap<String, String>,
+    secrets: Mutex<std::collections::HashMap<String, String>>,
 }
 
 impl SecretStore for MemorySecretStore {
-    fn save(&mut self, key: &str, value: &str) -> Result<(), String> {
-        self.secrets.insert(key.to_string(), value.to_string());
+    fn save(&self, key: &str, value: &str) -> Result<(), String> {
+        let mut map = self.secrets.lock().map_err(|e| e.to_string())?;
+        map.insert(key.to_string(), value.to_string());
         Ok(())
     }
     
     fn get(&self, key: &str) -> Result<Option<String>, String> {
-        Ok(self.secrets.get(key).cloned())
+        let map = self.secrets.lock().map_err(|e| e.to_string())?;
+        Ok(map.get(key).cloned())
     }
     
-    fn delete(&mut self, key: &str) -> Result<(), String> {
-        self.secrets.remove(key);
+    fn delete(&self, key: &str) -> Result<(), String> {
+        let mut map = self.secrets.lock().map_err(|e| e.to_string())?;
+        map.remove(key);
         Ok(())
     }
 }

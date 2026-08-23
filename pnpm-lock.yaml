@@ -149,6 +149,10 @@ importers:
         version: 5.9.3
 
   packages/i18n:
+    dependencies:
+      '@mailmind/contracts':
+        specifier: workspace:*
+        version: link:../contracts
     devDependencies:
       typescript:
         specifier: ^5.7.0

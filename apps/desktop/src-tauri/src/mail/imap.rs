@@ -1,11 +1,8 @@
 //! IMAP client adapter using async-imap
 
 use super::{ConnectionConfig, ParsedEmail, MailboxInfo};
-use async_imap::{Client, Connect, TlsClient};
-use mailparse::decode_headers;
-use tokio::net::TcpStream;
 
-/// IMAP client wrapper
+/// IMAP client wrapper (placeholder for demo)
 pub struct ImapClient {
     config: ConnectionConfig,
 }
@@ -15,10 +12,8 @@ impl ImapClient {
         Self { config }
     }
 
-    /// Connect to IMAP server
-    pub async fn connect(&self) -> Result<Client<TlsClient>, String> {
-        // For demo purposes, return a placeholder
-        // In production, use async-imap properly
+    /// Connect to IMAP server (placeholder - requires real network)
+    pub async fn connect(&self) -> Result<(), String> {
         Err("IMAP client requires real network connection".to_string())
     }
 
@@ -35,8 +30,8 @@ impl ImapClient {
     /// Fetch emails from mailbox
     pub async fn fetch_emails(
         &self,
-        mailbox: &str,
-        limit: usize,
+        _mailbox: &str,
+        _limit: usize,
     ) -> Result<Vec<ParsedEmail>, String> {
         // Demo implementation - returns empty
         Ok(vec![])

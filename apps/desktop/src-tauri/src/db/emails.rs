@@ -1,9 +1,7 @@
 //! Email storage operations
 
-use super::init_db;
 use crate::mail::ParsedEmail;
 use rusqlite::{Connection, Result};
-use std::path::PathBuf;
 
 /// Store an email in the database
 pub fn store_email(conn: &Connection, account_id: &str, email: &ParsedEmail) -> Result<String> {
@@ -19,7 +17,7 @@ pub fn store_email(conn: &Connection, account_id: &str, email: &ParsedEmail) -> 
             &email.subject,
             &email.from_name,
             &email.from_email,
-            email.received_at.to_rfc3339(),
+            &email.received_at,
             &email.body_plain,
             email.has_attachments,
             email.attachment_count,

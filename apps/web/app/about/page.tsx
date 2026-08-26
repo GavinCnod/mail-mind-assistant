@@ -143,7 +143,7 @@ export default function AboutPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <header className="az-hero" style={{ paddingBottom: 'var(--az-section-y)', backgroundImage: 'url("/images/bg-02.png")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundBlendMode: 'overlay' }}>
+      <header className="az-hero" style={{ paddingBottom: 'var(--az-section-y)', backgroundImage: `url('/images/bg-02.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="az-container">
           <div className="az-hero-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <div style={{ maxWidth: '800px' }}>

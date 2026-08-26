@@ -195,7 +195,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <header className="az-hero hero-bg-landing">
+      <header className="az-hero">
         <div className="az-container">
           <div className="az-hero-inner">
             {/* Left: Editorial copy */}

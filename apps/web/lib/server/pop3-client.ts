@@ -121,7 +121,7 @@ export class Pop3Client {
     this._destroy();
   }
 
-  // ── Private ────────────────────────────────────────────────
+  // ── Private ────────────────────────────────────────
 
   /** Wait for next complete line (uses FIFO queue, no race condition) */
   private _readLine(): Promise<string> {

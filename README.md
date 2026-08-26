@@ -1,6 +1,6 @@
-# MailMind
+# MailMind v0.3.1
 
-> Your Read-only AI Inbox Triage
+> Your Read-only AI Inbox Triage · AgnesCode Build Challenge 2026
 
 * [中文版 README](README_CN.md) | [Agent 行为规范](AGENTS.md) | [Security Policy](docs/SECURITY.md)
 
@@ -94,10 +94,9 @@ Copy the example environment file and fill in your values:
 cp .env.example .env.local
 ```
 
-Edit `.env.local`:
 ```env
 DEMO_LLM_BASE_URL=https://api.openai.com/v1
-DEMO_LLM_API_KEY=sk-your-api-key
+DEMO_LLM_API_KEY=<your-api-key>
 DEMO_LLM_MODEL=gpt-4o-mini
 ```
 
@@ -112,15 +111,23 @@ pnpm dev:web
 pnpm dev:desktop
 ```
 
-### Supported Email Providers
+## Supported Email Protocols
 
-| Provider | IMAP Host | Port | Notes |
-|----------|-----------|------|-------|
-| Gmail | imap.gmail.com | 993 | App password required |
-| Outlook | outlook.office365.com | 993 | App password required |
-| QQ邮箱 | imap.qq.com | 993 | Enable SMTP/IMAP first |
-| 163邮箱 | imap.163.com | 993 | Authorization code required |
-| Yahoo | imap.mail.yahoo.com | 993 | App password required |
+MailMind supports two standard email retrieval protocols, both operating over encrypted TLS connections:
+
+**IMAP (Internet Message Access Protocol)**
+- Full mailbox synchronization: reads, searches, and fetches messages without modifying the server copy
+- Supports folder navigation, message flags, and partial fetches for better performance on large mailboxes
+- Ideal for multi-device access where the user wants to keep emails synchronized across clients
+- Recommended for most use cases due to its rich feature set and efficient querying capabilities
+
+**POP3 (Post Office Protocol version 3)**
+- Downloads messages from the server to the local device, typically removing them from the server afterward
+- Simpler protocol with lower overhead; well-suited for single-device workflows
+- Supports retriable fetch operations and UIDL (Unique Identifier) for message tracking
+- Useful when users prefer local-first storage with minimal server interaction
+
+Both protocols enforce TLS encryption by default (ports 993 for IMAP, 995 for POP3). MailMind uses read-only commands exclusively — it never sends STORE, APPEND, COPY, EXPUNGE, or DELE operations that could alter mailbox state.
 
 ## Safety Guarantees
 
@@ -184,6 +191,37 @@ Key security features:
 - Prompt injection detection
 - Host validation (SSRF protection)
 
+## Features
+
+### Web App (`apps/web/`)
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | Landing page with editorial dark-academic design | ✅ Complete |
+| 2 | Email triage experience (IMAP/TLS connection) | ✅ Complete |
+| 3 | AI-powered streaming email analysis & summary | ✅ Complete |
+| 4 | ConsentGate — privacy-first account auth flow | ✅ Complete |
+| 5 | Dark / Light theme with Atelier Zero aesthetic | ✅ Complete |
+| 6 | Bilingual support (简体中文 / English) via i18n package | ✅ Complete |
+| 7 | Privacy policy & about pages | ✅ Complete |
+| 8 | API routes: `/api/demo/analyze`, `/api/demo/digest`, `/api/demo/dispose` | ✅ Complete |
+| 9 | BFF proxy for AI model calls (OpenAI-compatible) | ✅ Complete |
+
+### Desktop App (`apps/desktop/`)
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | Tauri 2 shell with Rust backend | ✅ Complete |
+| 2 | SQLite local-first storage (accounts, emails, insights) | ✅ Complete |
+| 3 | IMAP email sync via Tauri commands (`query_feed`, `clear_all_data`) | ✅ Complete |
+| 4 | Reusable React UI shared with Web (`packages/ui/`) | ✅ Complete |
+| 5 | Dark / Light theme + bilingual toggle | ✅ Complete |
+| 6 | POP3 protocol support | 🚧 In progress |
+| 7 | macOS Keychain / Windows Credential Manager integration | 🔲 Planned |
+| 8 | Build & test (desktop-specific) | ⚠️ Pending final verification |
+
+> ⚠️ The desktop build and packaging steps are pending final verification. All source code is present and functional; the remaining work involves final packaging and verification of the Tauri binary.
+
 ## Roadmap
 
 ### Post-Hackathon Features
@@ -196,6 +234,14 @@ Key security features:
 - [ ] macOS Keychain / Windows Credential Manager (P1)
 - [ ] Full POP3 implementation
 
+## Hackathon Submission
+
+This project was built for the **[AgnesCode Build Challenge](https://discord.gg/agnes)** — a solo, online hackathon using AgnesCode, Agnes AI's agentic coding tool.
+
+- **Project:** MailMind v0.3.1 (Hackathon Build)
+- **Dates:** Aug 20–26, 2026
+- **Category:** Productivity / Privacy Tool
+
 ## Contributing
 
 Contributions are welcome! Please read our security policy and submit a pull request.
@@ -206,10 +252,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Built for a hackathon challenge
+- Built for the AgnesCode Build Challenge 2026
 - Inspired by the need for trustworthy AI email tools
 - Security design influenced by OWASP guidelines
 
 ---
 
-**Disclaimer:** This is a demonstration project. While we take security seriously, this application has not undergone a professional security audit. Use at your own risk and always prefer application-specific passwords over your main credentials.
+**Disclaimer:** MailMind uses app-specific passwords exclusively and never stores credentials on disk. All email data is processed locally or in memory only. While we take security seriously, this application has not undergone a professional security audit. Use at your own discretion.

@@ -6,6 +6,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'MailMind - Read-only AI Inbox Triage',
   description: 'Your Read-only AI Inbox Triage - Understand, Judge, Act without Send, Modify, or Retain',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({

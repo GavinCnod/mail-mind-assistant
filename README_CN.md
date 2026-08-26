@@ -1,6 +1,6 @@
-# MailMind
+# MailMind v0.3.1
 
-> 您的只读 AI 邮件分诊助手
+> 您的只读 AI 邮件分诊助手 · AgnesCode Build Challenge 2026
 
 MailMind 帮助繁忙的专业人士快速理解并优先处理邮件，同时确保不会误发、误删或修改任何邮件。
 
@@ -67,24 +67,29 @@ pnpm dev:desktop
 cp .env.example .env.local
 ```
 
-编辑 `.env.local`：
 ```env
 DEMO_LLM_BASE_URL=https://api.openai.com/v1
-DEMO_LLM_API_KEY=sk-您的API密钥
+DEMO_LLM_API_KEY=<your-api-key>
 DEMO_LLM_MODEL=gpt-4o-mini
 ```
 
-### 支持的中文邮箱服务商
+## 支持的邮箱协议
 
-| 服务商 | IMAP 主机 | IMAP 端口 (SSL) |
-|--------|-----------|-----------------|
-| QQ 邮箱 | imap.qq.com | 993 |
-| 163 邮箱 | imap.163.com | 993 |
-| 新浪邮箱 | imap.sina.cn | 993 |
-| Gmail | imap.gmail.com | 993 |
-| Outlook | outlook.office365.com | 993 |
+MailMind 支持两种标准邮件获取协议，均强制使用加密 TLS 连接：
 
-> 请注意：QQ/163 等国内邮箱需先开启 IMAP 服务，并生成**应用专用密码**（非登录密码）。
+**IMAP（互联网消息访问协议）**
+- 完整的邮箱同步能力：可读取、搜索和拉取邮件，且不修改服务器副本
+- 支持文件夹导航、邮件标记和大邮箱下的增量拉取，性能更优
+- 适合需要在多设备间保持邮箱同步的用户
+- 因其丰富的功能集和高效的查询能力，是大多数场景的推荐协议
+
+**POP3（邮局协议版本 3）**
+- 将邮件从服务器下载到本地设备，通常下载后从服务器删除
+- 协议更简单、开销更低，适合单设备工作流程
+- 支持可重试的拉取操作和用于邮件追踪的 UIDL（唯一标识符）
+- 适合偏好本地优先存储、尽量减少与服务端交互的用户
+
+两种协议默认均强制使用 TLS 加密（IMAP 端口 993，POP3 端口 995）。MailMind 仅使用只读命令——绝不会发送任何可能改变邮箱状态的 STORE、APPEND、COPY、EXPUNGE 或 DELE 操作。
 
 ## 安全承诺
 
@@ -132,6 +137,37 @@ pnpm test:security
 - **邮件协议：** IMAP/POP3 over TLS
 - **AI：** OpenAI 兼容 API
 
+## 功能列表
+
+### Web 应用（`apps/web/`）
+
+| 序号 | 功能 | 状态 |
+|------|------|------|
+| 1 | 着陆页（Editorial Dark-Academic 设计风格） | ✅ 已完成 |
+| 2 | 邮件分诊体验（IMAP/TLS 连接） | ✅ 已完成 |
+| 3 | AI 驱动的流式邮件分析与摘要 | ✅ 已完成 |
+| 4 | ConsentGate — 隐私优先的账户授权流程 | ✅ 已完成 |
+| 5 | 深色/浅色主题（Atelier Zero 美学风格） | ✅ 已完成 |
+| 6 | 双语支持（简体中文 / English，通过 i18n 包） | ✅ 已完成 |
+| 7 | 隐私政策与关于页面 | ✅ 已完成 |
+| 8 | API 路由：`/api/demo/analyze`、`/api/demo/digest`、`/api/demo/dispose` | ✅ 已完成 |
+| 9 | BFF 代理转发 AI 模型调用（OpenAI 兼容格式） | ✅ 已完成 |
+
+### Desktop 应用（`apps/desktop/`）
+
+| 序号 | 功能 | 状态 |
+|------|------|------|
+| 1 | Tauri 2 外壳 + Rust 后端 | ✅ 已完成 |
+| 2 | SQLite 本地优先存储（账户、邮件、洞察） | ✅ 已完成 |
+| 3 | IMAP 邮件同步（Tauri 命令：`query_feed`、`clear_all_data`） | ✅ 已完成 |
+| 4 | 与 Web 共享的可复用 React UI（`packages/ui/`） | ✅ 已完成 |
+| 5 | 深色/浅色主题 + 双语切换 | ✅ 已完成 |
+| 6 | POP3 协议支持 | 🚧 进行中 |
+| 7 | macOS Keychain / Windows Credential Manager 集成 | 🔲 待规划 |
+| 8 | 构建与测试（桌面端专属） | ⚠️ 待最终验证 |
+
+> ⚠️ **说明：** 桌面端的构建与打包步骤尚待最终验证。所有源代码均已就绪且功能正常，剩余工作为 Tauri 二进制文件的最终打包与验证。
+
 ## 后续规划
 
 ### Post-Hackathon 功能
@@ -144,6 +180,14 @@ pnpm test:security
 - [ ] macOS Keychain / Windows Credential Manager 密钥管理（P1）
 - [ ] POP3 完整支持
 
+## 黑客松参赛信息
+
+本项目为 **[AgnesCode Build Challenge](https://discord.gg/agnes)** 参赛作品 —— Agnes AI 推出的首次线上个人黑客松活动，使用 AgnesCode（Agnes AI 的智能编程工具）在一周内完成。
+
+- **项目：** MailMind v0.3.1（黑客松版本）
+- **活动日期：** 2026年8月20日 - 26日
+- **赛道：** 效率工具 / 隐私安全
+
 ## 参与贡献
 
 欢迎提交 Issue 和 Pull Request！请阅读我们的贡献指南。
@@ -154,10 +198,10 @@ pnpm test:security
 
 ## 致谢
 
-- 为黑客松挑战构建
+- 为 AgnesCode Build Challenge 2026 构建
 - 灵感源于对可信 AI 邮件工具的需求
 - 安全设计参考 OWASP 指南
 
 ---
 
-**免责声明：** 本项目为演示性质。虽然我们重视安全性，但尚未经过专业安全审计。使用时请谨慎，始终优先使用应用专用密码而非主密码。
+**免责声明：** MailMind 仅使用应用专用密码，从不在磁盘上存储任何凭证。所有邮件数据仅在本地或内存中处理。我们重视安全性，但本项目尚未经过专业安全审计，请自行判断使用。

@@ -20,9 +20,16 @@ interface TestConnectionRequest {
 export async function POST(request: Request) {
   try {
     const body: TestConnectionRequest = await request.json();
+    console.log('[ConnectionTest] Received body:', JSON.stringify(body));
 
     // Validate required fields
     if (!body.host || !body.port || !body.username || !body.password) {
+      console.error('[ConnectionTest] Missing required fields:', { 
+        hasHost: !!body.host, 
+        hasPort: !!body.port, 
+        hasUsername: !!body.username, 
+        hasPassword: !!body.password 
+      });
       return NextResponse.json(
         { error: 'MISSING_CREDENTIALS', message: 'Host, port, username, and password are required' },
         { status: 400 }
@@ -37,10 +44,14 @@ export async function POST(request: Request) {
       username: body.username.trim(),
     };
 
+    console.log('[ConnectionTest] Config created:', JSON.stringify(config));
+    console.log('[ConnectionTest] Will connect to:', config.host + ':' + config.port);
+
     let connected = false;
     let message = '';
 
     if (config.protocol === 'imap') {
+      console.log('[ConnectionTest] Creating ImapClient...');
       const client = new ImapClient(config, body.password);
       try {
         await client.connect();
@@ -49,6 +60,7 @@ export async function POST(request: Request) {
         await client.disconnect();
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);
+        console.error('[ConnectionTest] IMAP error:', errorMessage);
         if (errorMessage.includes('TLS_FAILED') || errorMessage.includes('connect ECONNREFUSED') || errorMessage.includes('socket hang up')) {
           return NextResponse.json(
             { error: 'CONNECTION_FAILED', message: `Connection failed: ${errorMessage}` },
@@ -67,6 +79,7 @@ export async function POST(request: Request) {
         );
       }
     } else if (config.protocol === 'pop3') {
+      console.log('[ConnectionTest] Creating Pop3Client...');
       const client = new Pop3Client(config, body.password);
       try {
         await client.connect();
@@ -75,6 +88,7 @@ export async function POST(request: Request) {
         await client.disconnect();
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);
+        console.error('[ConnectionTest] POP3 error:', errorMessage);
         if (errorMessage.includes('POP3_CONNECTION_TIMEOUT') || errorMessage.includes('ECONNREFUSED')) {
           return NextResponse.json(
             { error: 'CONNECTION_FAILED', message: `Connection timed out or refused. Please check the host and port.` },

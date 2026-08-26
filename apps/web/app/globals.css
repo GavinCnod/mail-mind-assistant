@@ -461,7 +461,6 @@ body::before {
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
 }
 .az-hero-inner {
   display: grid;

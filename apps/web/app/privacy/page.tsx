@@ -143,16 +143,17 @@ export default function PrivacyPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <header className="az-hero" style={{ paddingBottom: 'var(--az-section-y)', backgroundImage: `url('/images/bg-03.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="az-container">
-          <div className="az-hero-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+      <header className="az-hero" style={{ paddingBottom: 'var(--az-section-y)', backgroundImage: `url('/images/bg-03.png')`, backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.68) 100%)', zIndex: 1 }} />
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <div className="az-hero-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
             <div style={{ maxWidth: '800px' }}>
-              <div className="az-eyebrow" ref={addReveal()} style={{ justifyContent: 'center' }}>Legal · Policy · Transparency</div>
-              <h1 className="az-headline" ref={addReveal()} style={{ maxWidth: '700px', margin: '0 auto' }}>
+              <div className="az-eyebrow" ref={addReveal()} style={{ justifyContent: 'center', color: 'rgba(255,255,255,0.85)' }}>Legal · Policy · Transparency</div>
+              <h1 className="az-headline" ref={addReveal()} style={{ maxWidth: '700px', margin: '0 auto', color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.6)' }}>
                 Your data, <em>never</em><br />
                 stored<span style={{ color: 'var(--az-accent)' }}>.</span>
               </h1>
-              <div className="az-body" ref={addReveal()} style={{ maxWidth: '560px', margin: '0 auto' }}>
+              <div className="az-body" ref={addReveal()} style={{ maxWidth: '560px', margin: '0 auto', color: 'rgba(255,255,255,0.9)' }}>
                 <p>{t('privacy.webSummary')}</p>
               </div>
               <div style={{ marginTop: '32px', fontFamily: 'var(--az-font-mono)', fontSize: '11px', color: 'var(--az-ink-faint)', letterSpacing: '0.04em' }} ref={addReveal()}>

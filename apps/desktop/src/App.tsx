@@ -48,7 +48,7 @@ function App() {
         senderDomain: '',
         receivedAt: e.received_at || new Date().toISOString(),
         hasAttachments: false,
-        subject: e.subject || '(无主题)',
+        subject: e.subject || t('desktop.noSubject'),
         schemaVersion: '1.1',
         outputLocale: 'zh-CN' as const,
         oneLineSummary: e.subject || '',
@@ -101,7 +101,7 @@ function App() {
         zIndex: 100,
       }}>
         <div style={{ fontSize: '2.4rem', fontWeight: 700, color: 'var(--color-primary)' }}>
-          MailMind Desktop
+          {t('desktop.title')}
         </div>
         <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
           <ThemeToggle />
@@ -138,7 +138,7 @@ function App() {
                     fontWeight: 600,
                   }}
                 >
-                  {loading ? '同步中...' : '🔄 同步邮件'}
+                  {loading ? t('desktop.syncing') : t('desktop.syncEmails')}
                 </button>
                 <button
                   onClick={clearData}
@@ -151,7 +151,7 @@ function App() {
                     cursor: 'pointer',
                   }}
                 >
-                  🗑️ 清除数据
+                  🗑️ {t('desktop.clearData')}
                 </button>
               </div>
             </div>
@@ -174,13 +174,13 @@ function App() {
             <Feed
               cards={cards}
               loading={loading}
-              emptyMessage={cards.length === 0 && !loading ? '暂无邮件。点击"同步邮件"开始使用。' : ''}
+              emptyMessage={cards.length === 0 && !loading ? t('desktop.emptyMessage') : ''}
             />
 
             {/* Info footer */}
             <footer style={{ marginTop: 'var(--space-8)', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '1.4rem' }}>
-              <p>🔒 MailMind Desktop — 所有数据本地存储，永不上传</p>
-              <p style={{ marginTop: 'var(--space-1)' }}>SQLite • 5天/500封留存策略 • 零持久化密码</p>
+              <p>{t('desktop.footer')}</p>
+              <p style={{ marginTop: 'var(--space-1)' }}>{t('desktop.footerDetail')}</p>
             </footer>
           </>
         )}

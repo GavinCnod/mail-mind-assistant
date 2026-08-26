@@ -176,6 +176,18 @@ export const en = {
     UNKNOWN: 'An unknown error occurred. Please try again later.',
   },
 
+  // ---- Desktop App ----
+  desktop: {
+    title: 'MailMind Desktop',
+    syncEmails: 'Sync Emails',
+    syncing: 'Syncing...',
+    clearData: 'Clear Data',
+    emptyMessage: 'No emails yet. Click "Sync Emails" to get started.',
+    footer: 'All data stored locally, never uploaded',
+    footerDetail: 'SQLite • 5 days / 500 emails retention • Zero password persistence',
+    noSubject: '(No Subject)',
+  },
+
   // ---- Privacy ----
   privacy: {
     title: 'Privacy Policy',

@@ -169,6 +169,18 @@ export const zhCN = {
     UNKNOWN: '发生未知错误。请稍后重试。',
   },
 
+  // ---- Desktop App ----
+  desktop: {
+    title: 'MailMind 桌面端',
+    syncEmails: '同步邮件',
+    syncing: '同步中...',
+    clearData: '清除数据',
+    emptyMessage: '暂无邮件。点击"同步邮件"开始使用。',
+    footer: '所有数据本地存储，永不上传',
+    footerDetail: 'SQLite • 5天/500封留存策略 • 零持久化密码',
+    noSubject: '(无主题)',
+  },
+
   // ---- Privacy ----
   privacy: {
     title: '隐私说明',

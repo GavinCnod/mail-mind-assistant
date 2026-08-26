@@ -218,32 +218,15 @@ export default function LandingPage() {
                   {t('nav.github')}
                 </a>
               </div>
-              {/* Coordinates */}
-              <div
-                style={{
-                  marginTop: '32px',
-                  fontFamily: 'var(--az-font-mono)',
-                  fontSize: '11px',
-                  color: 'var(--az-ink-faint)',
-                  letterSpacing: '0.04em',
-                }}
-                ref={addReveal()}
-              >
-                40.7128° N · 74.0060° W · PLATE Nº 01
-              </div>
             </div>
 
             {/* Right: Collage image */}
-            <div className="az-hero-visual" ref={addReveal()}>
-              <CollageHero />
+            <div className="az-hero-visual" ref={addReveal()} style={{ backgroundImage: "url("/images/bg-01.png")", backgroundSize: "cover", backgroundPosition: "center" }}><img src="/images/bg-01.png" alt="Landing" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /><CollageHero />
               {/* Corner brackets */}
               <div style={{ position: 'absolute', top: 12, left: 12, width: 22, height: 22, borderTop: '1px solid rgba(0,0,0,0.2)', borderLeft: '1px solid rgba(0,0,0,0.2)' }} />
               <div style={{ position: 'absolute', top: 12, right: 12, width: 22, height: 22, borderTop: '1px solid rgba(0,0,0,0.2)', borderRight: '1px solid rgba(0,0,0,0.2)' }} />
               <div style={{ position: 'absolute', bottom: 12, left: 12, width: 22, height: 22, borderBottom: '1px solid rgba(0,0,0,0.2)', borderLeft: '1px solid rgba(0,0,0,0.2)' }} />
               <div style={{ position: 'absolute', bottom: 12, right: 12, width: 22, height: 22, borderBottom: '1px solid rgba(0,0,0,0.2)', borderRight: '1px solid rgba(0,0,0,0.2)' }} />
-              <div style={{ position: 'absolute', bottom: 16, right: 16, fontFamily: 'var(--az-font-mono)', fontSize: '10px', color: 'rgba(0,0,0,0.35)', zIndex: 2 }}>
-                PLATE Nº 01 · MMXXVI
-              </div>
             </div>
           </div>
         </div>

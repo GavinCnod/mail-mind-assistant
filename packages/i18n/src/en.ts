@@ -246,6 +246,13 @@ export const en = {
     step1: 'Initial authorization',
     step2: 'Email connection configuration',
     step3: 'AI analysis & summary',
+    analyzeEmails: 'Analyze Emails',
+    generateBrief: 'Generate Brief',
+    analyzing: 'Analyzing...',
+    generating: 'Generating...',
+    analysisComplete: 'Analysis complete',
+    digestComplete: 'Brief generated',
+    analysisResult: 'Analysis Result',
   },
 
   // ---- Desktop App ----

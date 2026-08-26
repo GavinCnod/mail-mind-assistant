@@ -6,8 +6,10 @@ import { type LlmConfig } from '@mailmind/contracts';
 
 export class LlmAdapter {
   private client: OpenAI;
+  readonly model: string;
 
   constructor(config: LlmConfig) {
+    this.model = config.model;
     this.client = new OpenAI({
       apiKey: config.apiKey,
       baseURL: config.baseUrl,

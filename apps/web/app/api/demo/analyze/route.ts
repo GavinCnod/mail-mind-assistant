@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import { MailTriageAgent, type TriageOptions } from '../../../../lib/server/triage-agent';
 import { FIXTURE_INSIGHTS, FIXTURE_EMAILS } from '../../../../lib/server/fixtures';
 import { sanitizeContent } from '../../../../lib/server/sanitize-html';
-import type { StreamEvent, EmailCardViewModel, SanitizedEmailDetail } from '@mailmind/contracts';
+import type { StreamEvent, EmailCardViewModel, SanitizedEmailDetail, ConnectionConfig } from '@mailmind/contracts';
 
 const encoder = new TextEncoder();
 
@@ -14,8 +14,24 @@ function encodeSSE(event: StreamEvent): string {
 }
 
 export async function POST(request: Request) {
+  console.log('[API] POST /api/demo/analyze received at', new Date().toISOString());
+  
   try {
     const body = await request.json();
+
+    console.log('[API] ========================================');
+    console.log('[API] Full request body keys:', Object.keys(body));
+    console.log('[API] Has password:', !!body.password);
+    console.log('[API] Connection details:', { host: body.connection?.host, port: body.connection?.port, protocol: body.connection?.protocol });
+    console.log('[API] ========================================');
+    console.log('[API] Connection details:', {
+      host: body.connection?.host,
+      port: body.connection?.port,
+      username: body.connection?.username,
+      encryption: body.connection?.encryption,
+      protocol: body.connection?.protocol,
+    });
+    console.log('[API] ========================================');
 
     // Validate consent
     if (!body.consent?.userAgreement || !body.consent?.privacyPolicy || !body.consent?.mailProcessingAuth) {
@@ -34,11 +50,30 @@ export async function POST(request: Request) {
       body.connection?.username
     );
 
+    console.log('[API] hasCredentials:', hasCredentials, 'host present:', !!body.connection?.host, 'username present:', !!body.connection?.username);
+
     if (!hasCredentials) {
+      console.log('[API] Falling back to demo mode - missing credentials');
       return demoModeStream(locale, maxEmails);
     }
 
-    return realModeStream(body.connection, body.llm, locale, maxEmails);
+    // Use server-side LLM config (don't trust client-provided API key)
+    const serverLlm = {
+      baseUrl: process.env.DEMO_LLM_BASE_URL || 'https://apihub.agnes-ai.com/v1',
+      apiKey: process.env.DEMO_LLM_API_KEY || '',
+      model: process.env.DEMO_LLM_MODEL || 'agnes-2.0-flash',
+    };
+    
+    // DEBUG: Log if API key is empty or invalid
+    if (!serverLlm.apiKey) {
+      console.error('[API] WARNING: DEMO_LLM_API_KEY is not set!');
+    } else if (serverLlm.apiKey.length < 20) {
+      console.warn('[API] WARNING: DEMO_LLM_API_KEY looks too short:', serverLlm.apiKey.length);
+    } else {
+      console.log('[API] Using server LLM config:', { baseUrl: serverLlm.baseUrl, hasApiKey: !!serverLlm.apiKey, model: serverLlm.model });
+    }
+    
+    return realModeStream(body.connection, body.password || '', serverLlm, locale, maxEmails);
 
   } catch (error) {
     console.error('[MailMind] Analyze error:', error);
@@ -121,20 +156,26 @@ async function demoModeStream(locale: string, maxEmails: number) {
 // ── Real mode ───────────────────────────────────────────────────────
 
 async function realModeStream(
-  connection: { host: string; port: number; encryption: string; username: string; password?: string },
+  connection: ConnectionConfig,
+  password: string,
   llm: { baseUrl: string; apiKey: string; model: string } | undefined,
   locale: string,
   maxEmails: number,
 ) {
+  console.log('[API] Creating agent with:', { 
+    protocol: connection.protocol, 
+    host: connection.host, 
+    port: connection.port, 
+    encryption: connection.encryption 
+  });
+  
+  if (!connection.host || !connection.port || !connection.username) {
+    throw new Error('MISSING_CREDENTIALS');
+  }
+
   const agent = new MailTriageAgent(
-    {
-      protocol: 'imap',
-      host: connection.host,
-      port: connection.port,
-      encryption: connection.encryption as 'ssl' | 'starttls',
-      username: connection.username,
-    },
-    connection.password || '',
+    connection,
+    password,
     llm ? {
       baseUrl: llm.baseUrl,
       apiKey: llm.apiKey,

@@ -5,107 +5,9 @@ import Link from 'next/link';
 import { useLocale, useTheme } from '@mailmind/ui';
 import { ThemeToggle, LocaleToggle } from '@mailmind/ui';
 
-export default function ExperiencePage() {
-  const { t } = useLocale();
-  const [hasConsented, setHasConsented] = useState(false);
-  const [debug] = useState(false);
-  const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // ─── Connection form state ───
-  const [protocol, setProtocol] = useState<'imap' | 'pop3'>('imap');
-  const [host, setHost] = useState('');
-  const [port, setPort] = useState('');
-  const [encryption, setEncryption] = useState<'ssl' | 'starttls' | 'none'>('ssl');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [connected, setConnected] = useState(false);
-  const [connecting, setConnecting] = useState(false);
-  const [error, setError] = useState('');
-  const [lastDigest, setLastDigest] = useState<string | null>(null);
-
-  // ─── Consent gate state ───
-  const [agreed, setAgreed] = useState({
-    userAgreement: false,
-    privacyPolicy: false,
-    mailProcessingAuth: false,
-  });
-
-  const allChecked = Object.values(agreed).every(Boolean);
-
-  const handleConsent = useCallback(() => {
-    setHasConsented(true);
-  }, []);
-
-  // ─── Connection handler ───
-  const handleConnect = async () => {
-    if (!host || !port || !username || !password) {
-      setError('All fields are required');
-      return;
-    }
-    setConnecting(true);
-    setError('');
-    try {
-      const res = await fetch('/api/demo/dispose');
-      if (!res.ok) throw new Error('Connection failed');
-      setConnected(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setConnecting(false);
-    }
-  };
-
-  // ─── Analysis handlers ───
-  const handleAnalyze = async () => {
-    try {
-      const res = await fetch('/api/demo/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ host, port, username, password, protocol, encryption }),
-      });
-      if (!res.ok) throw new Error('Analysis failed');
-      setConnected(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    }
-  };
-
-  const handleDigest = async () => {
-    try {
-      const res = await fetch('/api/demo/digest');
-      if (!res.ok) throw new Error('Digest generation failed');
-      const data = await res.json();
-      setLastDigest(JSON.stringify(data, null, 2));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    }
-  };
-
-  // ─── Scroll reveal setup ───
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-    );
-    revealRefs.current = revealRefs.current.filter(Boolean);
-    revealRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
-  const addReveal = () => {
-    const i = revealRefs.current.length;
-    revealRefs.current.push(null);
-    return (ref: HTMLDivElement | null) => { revealRefs.current[i] = ref; };
-  };
-
-  // ─── Form field helper ───
-  const FormField = ({ label, value, onChange, placeholder, type = 'text', hint }: any) => (
+/** Fixed-size form field to prevent re-creation on each render */
+function FormField({ label, value, onChange, placeholder, type = 'text', hint }: any) {
+  return (
     <div style={{ marginBottom: '16px' }}>
       <label style={{
         fontFamily: 'var(--az-font-mono)',
@@ -139,6 +41,265 @@ export default function ExperiencePage() {
       )}
     </div>
   );
+}
+
+export default function ExperiencePage() {
+  const { t } = useLocale();
+  const [hasConsented, setHasConsented] = useState(false);
+  const [debug] = useState(false);
+  const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // ─── Connection form state ───
+  const [protocol, setProtocol] = useState<'imap' | 'pop3'>('imap');
+  const [host, setHost] = useState('');
+  const [port, setPort] = useState('');
+  const [encryption, setEncryption] = useState<'ssl' | 'starttls' | 'none'>('ssl');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [connected, setConnected] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [error, setError] = useState('');
+  const [lastDigest, setLastDigest] = useState<string | null>(null);
+  const [lastAnalysis, setLastAnalysis] = useState<any[]>([]);
+  const step3Ref = useRef<HTMLDivElement>(null);
+
+  // ─── Consent gate state ───
+  const [agreed, setAgreed] = useState({
+    userAgreement: false,
+    privacyPolicy: false,
+    mailProcessingAuth: false,
+  });
+
+  const allChecked = Object.values(agreed).every(Boolean);
+
+  const handleConsent = useCallback(() => {
+    setHasConsented(true);
+  }, []);
+
+  // ─── Connection handler ───
+  const handleConnect = async () => {
+    if (!host || !port || !username || !password) {
+      setError('All fields are required');
+      return;
+    }
+    setConnecting(true);
+    setError('');
+    try {
+      // Call the actual connection test API
+      const res = await fetch('/api/connection/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          protocol,
+          host,
+          port: Number(port),
+          encryption,
+          username,
+          password,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || data.error || 'Connection failed');
+      setConnected(true);
+      setError('');
+      // Scroll to Step 3 after a brief delay so user sees the success message first
+      setTimeout(() => {
+        step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 600);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setConnecting(false);
+    }
+  };
+
+  // ─── Analysis state ───
+  const [insights, setInsights] = useState<any[]>([]);
+  const [emails, setEmails] = useState<any[]>([]);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [generating, setGenerating] = useState(false);
+
+  // ─── Consent state ───
+  const consent = {
+    userAgreement: true,
+    privacyPolicy: true,
+    mailProcessingAuth: true,
+  };
+
+  // ─── LLM config from env (only non-sensitive fields) ───
+  const llmConfig = {
+    baseUrl: process.env.NEXT_PUBLIC_LLM_BASE_URL || 'https://apihub.agnes-ai.com/v1',
+    model: process.env.NEXT_PUBLIC_LLM_MODEL || 'agnes-2.0-flash',
+    // Note: apiKey is NOT sent to frontend for security reasons
+    // Backend will use its own configured key
+  };
+
+  // ─── Analysis handlers ───
+  const handleAnalyze = async () => {
+    setAnalyzing(true);
+    setError('');
+    
+    // Validate connection info before analyzing
+    if (!host || !port || !username || !password) {
+      setError('请先完成邮箱连接配置（Step 2）');
+      setAnalyzing(false);
+      return;
+    }
+    
+    const requestBody = {
+      consent,
+      connection: { host, port: Number(port), username, protocol, encryption },
+      password,
+      llm: llmConfig,
+      uiPreference: { locale: 'zh-CN' },
+      maxEmails: 5,
+    };
+    
+    try {
+      const res = await fetch('/api/demo/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData?.message || `HTTP ${res.status}`);
+      }
+      
+      // Parse SSE stream - simplified approach
+      const textChunks: string[] = [];
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          textChunks.push(decoder.decode(value, { stream: true }));
+        }
+      }
+      
+      const fullText = textChunks.join('');
+      console.log('[Analyze] Request body being sent:', JSON.stringify(requestBody, null, 2));
+    console.log('[Analyze] Password in request:', !!requestBody.password);
+    console.log('[Analyze] Full SSE response preview:', fullText.slice(0, 500));
+      
+      // Parse events from full text
+      const events = fullText.split('\n\n').filter(s => s.trim());
+      const collectedEmails: any[] = [];
+      const collectedInsights: any[] = [];
+      
+      for (const eventBlock of events) {
+        const lines = eventBlock.split('\n');
+        let eventType = '';
+        let dataStr = '';
+        
+        for (const line of lines) {
+          if (line.startsWith('event:')) {
+            eventType = line.slice(6).trim();
+          } else if (line.startsWith('data:')) {
+            dataStr = line.slice(5).trim();
+          }
+        }
+        
+        if (!dataStr) continue;
+        
+        try {
+          const event = JSON.parse(dataStr);
+          console.log('[Analyze] Parsed event type:', eventType || event.type, 'has card:', !!event.card);
+          
+          if (event.type === 'email' || eventType === 'email') {
+            if (event.card) {
+              collectedEmails.push(event.card);
+              setEmails([...collectedEmails]); // Update display immediately
+            }
+          } else if (event.type === 'completed' || eventType === 'completed') {
+            collectedInsights.push(...(event.insights || []));
+            setInsights([...collectedInsights]);
+          } else if (event.type === 'error' || eventType === 'error') {
+            setError(event.safeMessage || event.message || 'Analysis error');
+          }
+        } catch (e) {
+          console.error('[Analyze] Failed to parse event:', e, 'data:', dataStr);
+        }
+      }
+      
+      console.log('[Analyze] Total emails collected:', collectedEmails.length, 'insights:', collectedInsights.length);
+      
+      // Fallback: if we got emails but no insights, use emails as insights
+      if (collectedEmails.length > 0 && collectedInsights.length === 0) {
+        console.log('[Analyze] Using emails as fallback insights');
+        setInsights(collectedEmails.map(e => ({ ...e })));
+      }
+      
+      setConnected(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const handleDigest = async () => {
+    if (insights.length === 0) {
+      setError('请先分析邮件');
+      return;
+    }
+    setGenerating(true);
+    setError('');
+    try {
+      const res = await fetch('/api/demo/digest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          consent,
+          insights,
+          uiPreference: { locale: 'zh-CN' },
+        }),
+      });
+      if (!res.ok) throw new Error('Digest generation failed');
+      const data = await res.json();
+      setLastDigest(JSON.stringify(data, null, 2));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  // ─── Scroll reveal setup ───
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    revealRefs.current = revealRefs.current.filter(Boolean);
+    revealRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // ─── Force reveal elements visible when step changes ───
+  useEffect(() => {
+    if (!hasConsented) return;
+    const timer = setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+        el.classList.add('visible');
+      });
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [hasConsented, connected]);
+
+  const addReveal = () => {
+    const i = revealRefs.current.length;
+    revealRefs.current.push(null);
+    return (ref: HTMLDivElement | null) => { revealRefs.current[i] = ref; };
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--az-paper)', position: 'relative' }}>
@@ -354,7 +515,14 @@ export default function ExperiencePage() {
                 <FormField label={t('connection.password')} value={password} onChange={setPassword} placeholder={t('connection.passwordHint')} type="password" hint={t('connection.passwordHint')} />
 
                 {error && (
-                  <p style={{ color: 'var(--color-error)', fontSize: '12px', fontFamily: 'var(--az-font-mono)', marginBottom: '16px' }}>{error}</p>
+                  <p style={{ color: 'var(--color-error)', fontSize: '12px', fontFamily: 'var(--az-font-mono)', marginBottom: '16px', padding: '12px', background: 'rgba(239,68,68,0.1)', borderRadius: '8px' }}>
+                    ❌ {error}
+                  </p>
+                )}
+                {connected && !error && (
+                  <p style={{ color: 'var(--az-accent)', fontSize: '12px', fontFamily: 'var(--az-font-mono)', marginBottom: '16px', padding: '12px', background: 'rgba(34,197,94,0.1)', borderRadius: '8px', border: '1px solid rgba(34,197,94,0.3)' }}>
+                    ✅ 连接成功！可以开始分析邮件了。
+                  </p>
                 )}
 
                 <button
@@ -381,7 +549,7 @@ export default function ExperiencePage() {
 
               {connected && (
                 <>
-                  <div className="sec-rule reveal" ref={addReveal()}>
+                  <div ref={(el) => { step3Ref.current = el; revealRefs.current.push(el); }} className="sec-rule reveal">
                     <span className="roman">III.</span>
                     <span className="sec-meta">{t('experience.step3')}</span>
                     <span className="page-count">003 / 003</span>
@@ -394,7 +562,7 @@ export default function ExperiencePage() {
                     padding: '40px',
                   }}>
                     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                      <button onClick={handleAnalyze} style={{
+                      <button onClick={handleAnalyze} disabled={analyzing} style={{
                         padding: '12px 24px',
                         fontFamily: 'var(--az-font-display)',
                         fontSize: '14px',
@@ -403,11 +571,12 @@ export default function ExperiencePage() {
                         color: '#1E3932',
                         border: 'none',
                         borderRadius: 'var(--radius-button)',
-                        cursor: 'pointer',
+                        cursor: analyzing ? 'not-allowed' : 'pointer',
+                        opacity: analyzing ? 0.7 : 1,
                       }}>
-                        Analyze Emails
+                        {analyzing ? t('experience.analyzing') : t('experience.analyzeEmails')}
                       </button>
-                      <button onClick={handleDigest} style={{
+                      <button onClick={handleDigest} disabled={generating || insights.length === 0} style={{
                         padding: '12px 24px',
                         fontFamily: 'var(--az-font-display)',
                         fontSize: '14px',
@@ -416,11 +585,84 @@ export default function ExperiencePage() {
                         color: 'var(--az-ink)',
                         border: '1px solid var(--az-rule-strong)',
                         borderRadius: 'var(--radius-button)',
-                        cursor: 'pointer',
+                        cursor: generating || insights.length === 0 ? 'not-allowed' : 'pointer',
+                        opacity: (generating || insights.length === 0) ? 0.7 : 1,
                       }}>
-                        Generate Brief
+                        {generating ? t('experience.generating') : t('experience.generateBrief')}
                       </button>
                     </div>
+
+                    {/* Analysis Results */}
+                    {emails.length > 0 && (
+                      <div style={{ marginTop: '24px' }}>
+                        <h4 style={{ 
+                          fontFamily: 'var(--az-font-display)',
+                          fontSize: '16px',
+                          fontWeight: 600,
+                          color: 'var(--az-ink)',
+                          margin: '0 0 12px'
+                        }}>
+                          {t('experience.analysisResult')} ({emails.length})
+                        </h4>
+                        <div style={{ 
+                          maxHeight: '400px', 
+                          overflowY: 'auto',
+                          border: '1px solid var(--az-rule)',
+                          borderRadius: '8px',
+                          background: 'var(--az-paper-deep)'
+                        }}>
+                          {emails.map((email, idx) => (
+                            <div key={idx} style={{
+                              padding: '12px',
+                              borderBottom: idx < emails.length - 1 ? '1px solid var(--az-rule)' : 'none'
+                            }}>
+                              <div style={{ 
+                                display: 'flex', 
+                                justifyContent: 'space-between',
+                                marginBottom: '4px'
+                              }}>
+                                <span style={{ 
+                                  fontFamily: 'var(--az-font-mono)',
+                                  fontSize: '12px',
+                                  color: 'var(--az-ink-muted)'
+                                }}>
+                                  {email.senderName || email.from}
+                                </span>
+                                <span style={{
+                                  padding: '2px 8px',
+                                  borderRadius: '4px',
+                                  fontSize: '10px',
+                                  fontWeight: 600,
+                                  background: email.priority === 'P0' || email.priority === 'P1' 
+                                    ? 'rgba(239, 68, 68, 0.1)' 
+                                    : 'rgba(34, 197, 94, 0.1)',
+                                  color: email.priority === 'P0' || email.priority === 'P1' ? '#dc2626' : '#16a34a'
+                                }}>
+                                  {email.priority}
+                                </span>
+                              </div>
+                              <div style={{ 
+                                fontFamily: 'var(--az-font-body)',
+                                fontSize: '13px',
+                                color: 'var(--az-ink)',
+                                lineHeight: 1.5
+                              }}>
+                                {email.subject}
+                              </div>
+                              <div style={{ 
+                                fontFamily: 'var(--az-font-body)',
+                                fontSize: '12px',
+                                color: 'var(--az-ink-muted)',
+                                marginTop: '6px',
+                                fontStyle: 'italic'
+                              }}>
+                                {email.oneLineSummary}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {lastDigest && (
                       <pre style={{

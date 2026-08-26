@@ -246,6 +246,13 @@ export const zhCN = {
     step1: '初始授权',
     step2: '邮箱连接配置',
     step3: 'AI 分析与摘要',
+    analyzeEmails: '分析邮件',
+    generateBrief: '生成简报',
+    analyzing: '分析中...',
+    generating: '生成中...',
+    analysisComplete: '分析完成',
+    digestComplete: '简报已生成',
+    analysisResult: '分析结果',
   },
 
   // ---- Desktop App ----

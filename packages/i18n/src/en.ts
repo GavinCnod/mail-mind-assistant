@@ -224,17 +224,32 @@ export const en = {
 
   // ---- About Page ----
   about: {
-    intro: 'MailMind is built by Gavin Chen and the MindRose team — a small group of engineers and strategists who believe privacy-first software can solve real business problems.',
-    gavinBio: 'Gavin Chen leads product direction, technical implementation, and content strategy for this project, working together with the MindRose team on product delivery, marketing, and maintenance.',
+    intro: 'MailMind is built by Gavin Chen (Leader of MindRose Team).',
+    gavinBio: 'Gavin Chen leads product direction, technical implementation, and content strategy for this project, deploying and maintaining the product under the CI/CD system of MindRose team.',
     team: {
       title: 'The MindRose Team',
+      desc: 'A group of engineers and strategists with multilingual and multidisciplinary backgrounds, dedicated to solving real business problems.',
       lindsay: 'Familiar with cross-border product marketing strategies and highly experienced in hands-on SEO, leading our SEO & GEO strategies.',
       anthony: 'Expert in online marketing strategies, content creation, and analysis, helping products and services succeed in digital marketing.',
       simon: 'Leads various server architecture designs, database optimizations, and cloud-native deployments.',
     },
     mindrose: {
       title: 'About MindRose Studio',
-      desc: 'This project is open-sourced by Gavin Chen and the MindRose team. MindRose is a tech team focused on delivering lightweight digital solutions for small and medium manufacturers, logistics companies, and cross-border traders. We use AI and full-stack agile development (Next.js, React, etc.) to deliver applications that solve real business pain points within weeks.',
+      desc: 'Developed and open-sourced by Gavin Chen of the MindRose team. MindRose is a multidisciplinary team of engineers and strategists with multilingual backgrounds, focused on delivering lightweight digital solutions for small and medium manufacturers, logistics companies, and cross-border traders. We do not peddle empty "digital transformation" concepts — instead, through AI and multi-modal application development (React, Next.js, Mendix, LangChain, n8n, Java, etc.), we ship practical applications that solve real business pain points within weeks.',
+    },
+    openSource: {
+      title: 'Open Source Tools',
+      meta: 'Open Source Projects · Browser-based Tools',
+      deepseek: {
+        name: 'DeepSeek API Usage Analysis',
+        desc: 'A browser-side analytics dashboard for DeepSeek API usage. Drag your monthly CSV exports onto the page and get instant cost charts, per-key breakdowns, cache analysis, and usage trends — all processed locally in your browser. No upload, no signup.',
+        link: 'https://github.com/GavinCnod/deepseek-api-usage-analysis',
+      },
+      agnes: {
+        name: 'Agnes API Usage Analysis',
+        desc: 'A browser-side analytics dashboard for Agnes AI API usage. Drag your usage CSV exports onto the page and get instant cost charts, per-key breakdowns, and usage trends — all processed locally in your browser. No upload, no signup.',
+        link: 'https://github.com/GavinCnod/agnes-api-usage-analysis',
+      },
     },
   },
 

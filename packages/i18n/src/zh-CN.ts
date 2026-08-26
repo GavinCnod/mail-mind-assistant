@@ -224,17 +224,32 @@ export const zhCN = {
 
   // ---- About Page ----
   about: {
-    intro: 'MailMind 由 Gavin Chen 与 MindRose 团队共同构建——一群相信隐私优先软件能解决真实业务问题的工程师与策略专家。',
-    gavinBio: 'Gavin Chen 负责这个项目的产品方向、技术实现与内容策略，并与 MindRose 团队一起完成产品部署、推广和维护。',
+    intro: 'MailMind 由 Gavin Chen（MindRose 团队 Leader）构建。',
+    gavinBio: 'Gavin Chen 负责这个项目的产品方向、技术实现与内容策略，在 MindRose 团队的 CI/CD 体系下完成产品部署和维护。',
     team: {
       title: 'MindRose 团队',
+      desc: '一群多语言多技能背景的工程师与策略专家，致力于解决真实业务问题。',
       lindsay: '熟悉跨国产品营销策略，有丰富的 SEO 实战经验，负责产品的 SEO & GEO 策略。',
       anthony: '熟悉在线营销策略、内容创作与分析，帮助产品和服务在获得在线营销推广方面取得成功。',
       simon: '主导各种服务端架构设计、数据库优化及云原生部署。',
     },
     mindrose: {
       title: '关于 MindRose Studio',
-      desc: '本项目由 Gavin Chen 及 MindRose 团队开发并开源呈现。MindRose 是专注于为中小制造企业、物流公司及跨国贸易商提供轻量级数字化解决方案的科技团队。我们不卖虚无的"数字化转型"概念，而是通过 AI 技术与全栈敏捷开发（Next.js、React 等），在几周内为你交付解决实际业务痛点的应用。',
+      desc: '由 MindRose 团队的 Gavin Chen 开发并开源呈现。MindRose 是一支多语言、多技能背景的工程师与策略专家团队，专注为中小制造企业、物流公司及跨国贸易商提供轻量级数字化解决方案。我们不贩卖"数字化转型"的空泛概念，而是借助 AI 与多模态应用开发（React、Next.js、Mendix、LangChain、n8n、Java 等），在数周内为你交付真正解决业务痛点的实用应用。',
+    },
+    openSource: {
+      title: '开源工具',
+      meta: '开源项目 · 浏览器端工具',
+      deepseek: {
+        name: 'DeepSeek API Usage Analysis',
+        desc: '一款纯浏览器端的 DeepSeek API 用量分析仪表盘。将月度 CSV 导出文件拖拽到页面，即刻获取费用图表、各 Key 用量明细、缓存分析和用量趋势——所有数据均在浏览器本地处理，不上传、无需注册。',
+        link: 'https://github.com/GavinCnod/deepseek-api-usage-analysis',
+      },
+      agnes: {
+        name: 'Agnes API Usage Analysis',
+        desc: '一款纯浏览器端的 Agnes AI API 用量分析仪表盘。将月度 CSV 导出文件拖拽到页面，即刻获取费用图表、各 Key 用量明细、和用量趋势——所有数据均在浏览器本地处理，不上传、无需注册。',
+        link: 'https://github.com/GavinCnod/agnes-api-usage-analysis',
+      },
     },
   },
 

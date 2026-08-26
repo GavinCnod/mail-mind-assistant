@@ -166,12 +166,14 @@ export default function AboutPage() {
           <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
             <span className="roman">I.</span>
             <span className="sec-meta">Author · Gavin Chen</span>
-            <span className="page-count">001 / 003</span>
+            <span className="page-count">001 / 004</span>
           </div>
           <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px', display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
               <div style={{ flexShrink: 0 }}>
-                <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--az-paper-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', fontWeight: 700, color: 'var(--az-accent)', fontFamily: 'var(--az-font-display)' }}>G</div>
+                <div style={{ width: '120px', height: '120px', borderRadius: '50%', overflow: 'hidden', background: 'var(--az-paper-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', fontWeight: 700, color: 'var(--az-accent)', fontFamily: 'var(--az-font-display)', flexShrink: 0 }}>
+                  G
+                </div>
               </div>
               <div>
                 <h3 style={{ fontFamily: 'var(--az-font-display)', fontSize: '24px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--az-ink)', margin: '0 0 12px' }}>Gavin Chen</h3>
@@ -191,7 +193,14 @@ export default function AboutPage() {
           <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
             <span className="roman">II.</span>
             <span className="sec-meta">Team · MindRose</span>
-            <span className="page-count">002 / 003</span>
+            <span className="page-count">002 / 004</span>
+          </div>
+          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 24px' }}>
+            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '24px 32px', textAlign: 'center' }}>
+              <p style={{ fontFamily: 'var(--az-font-body)', fontSize: '14px', color: 'var(--az-ink-soft)', lineHeight: 1.8, margin: 0 }}>
+                {t('about.team.desc')}
+              </p>
+            </div>
           </div>
           <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px' }}>
@@ -206,7 +215,9 @@ export default function AboutPage() {
                 ].map((member, i) => (
                   <div key={i} style={{ padding: '20px', background: 'var(--az-paper-deep)', borderRadius: '12px', border: '1px solid var(--az-rule)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--az-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 700, color: 'var(--az-paper)' }}>{member.initial}</div>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', background: 'var(--az-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 700, color: 'var(--az-paper)', flexShrink: 0 }}>
+                        {member.initial}
+                      </div>
                       <div>
                         <div style={{ fontFamily: 'var(--az-font-display)', fontSize: '14px', fontWeight: 600, color: 'var(--az-ink)' }}>{member.name}</div>
                         <div style={{ fontFamily: 'var(--az-font-mono)', fontSize: '10px', color: 'var(--az-ink-faint)', textTransform: 'uppercase' }}>{member.role}</div>
@@ -221,13 +232,66 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── ABOUT MINDROSE ── */}
+      {/* ── OPEN SOURCE TOOLS SECTION ── */}
       <section style={{ padding: 'var(--az-section-y) 0' }}>
         <div className="az-container">
           <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
             <span className="roman">III.</span>
+            <span className="sec-meta">{t('about.openSource.meta')}</span>
+            <span className="page-count">003 / 004</span>
+          </div>
+          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {[
+                {
+                  name: t('about.openSource.deepseek.name'),
+                  desc: t('about.openSource.deepseek.desc'),
+                  link: 'https://github.com/GavinCnod/deepseek-api-usage-analysis',
+                },
+                {
+                  name: t('about.openSource.agnes.name'),
+                  desc: t('about.openSource.agnes.desc'),
+                  link: 'https://github.com/GavinCnod/agnes-api-usage-analysis',
+                },
+              ].map((tool, i) => (
+                <div key={i} style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '32px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, minWidth: '200px' }}>
+                      <h4 style={{ fontFamily: 'var(--az-font-display)', fontSize: '16px', fontWeight: 700, color: 'var(--az-ink)', margin: '0 0 8px' }}>{tool.name}</h4>
+                      <p style={{ fontFamily: 'var(--az-font-body)', fontSize: '14px', color: 'var(--az-ink-soft)', lineHeight: 1.7, margin: 0 }}>{tool.desc}</p>
+                    </div>
+                    <a
+                      href={tool.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        fontFamily: 'var(--az-font-display)',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: 'var(--az-accent)',
+                        textDecoration: 'none',
+                        borderBottom: '1px solid var(--az-accent)',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                      }}
+                    >
+                      GitHub →
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT MINDROSE ── */}
+      <section style={{ padding: 'var(--az-section-y) 0', background: 'var(--az-paper-dark)' }}>
+        <div className="az-container">
+          <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
+            <span className="roman">IV.</span>
             <span className="sec-meta">About · MindRose Studio</span>
-            <span className="page-count">003 / 003</span>
+            <span className="page-count">004 / 004</span>
           </div>
           <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px' }}>

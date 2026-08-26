@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useLocale } from '@mailmind/ui';
 
-/* ─── Styled toggle components (same as landing page) ─── */
+/* ─── Styled toggle components (same as other pages) ─── */
 function ThemeToggleStyled() {
   const { theme, setTheme } = require('@mailmind/ui').useTheme();
   const isDark = theme === 'dark';
@@ -94,7 +94,7 @@ function LocaleToggleStyled() {
   );
 }
 
-export default function PrivacyPage() {
+export default function AboutPage() {
   const { t } = useLocale();
   const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -124,7 +124,7 @@ export default function PrivacyPage() {
     <div style={{ minHeight: '100vh', background: 'var(--az-paper)', position: 'relative' }}>
 
       {/* ── Side Rails ── */}
-      <div className="side-rail side-rail-left">MailMind v0.1 · Read-Only · EST. 2025</div>
+      <div className="side-rail side-rail-left">MailMind v0.1.1 · Read-Only · EST. 2025</div>
       <div className="side-rail side-rail-right">SECURE · PRIVATE · LOCAL-FIRST</div>
 
       {/* ── Navigation ── */}
@@ -132,7 +132,6 @@ export default function PrivacyPage() {
         <Link href="/" className="az-nav-brand">MailMind</Link>
         <ul className="az-nav-links">
           <li><Link href="/experience">Experience</Link></li>
-          <li><Link href="/about">关于作者</Link></li>
           <li><Link href="/privacy">Privacy</Link></li>
           <li><a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer">GitHub</a></li>
         </ul>
@@ -147,110 +146,71 @@ export default function PrivacyPage() {
         <div className="az-container">
           <div className="az-hero-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <div style={{ maxWidth: '800px' }}>
-              <div className="az-eyebrow" ref={addReveal()} style={{ justifyContent: 'center' }}>Legal · Policy · Transparency</div>
+              <div className="az-eyebrow" ref={addReveal()} style={{ justifyContent: 'center' }}>Author & Team · Origin Story</div>
               <h1 className="az-headline" ref={addReveal()} style={{ maxWidth: '700px', margin: '0 auto' }}>
-                Your data, <em>never</em><br />
-                stored<span style={{ color: 'var(--az-accent)' }}>.</span>
+                Who builds<br /><em>MailMind</em><span style={{ color: 'var(--az-accent)' }}>.</span>
               </h1>
               <div className="az-body" ref={addReveal()} style={{ maxWidth: '560px', margin: '0 auto' }}>
-                <p>{t('privacy.webSummary')}</p>
-              </div>
-              <div style={{ marginTop: '32px', fontFamily: 'var(--az-font-mono)', fontSize: '11px', color: 'var(--az-ink-faint)', letterSpacing: '0.04em' }} ref={addReveal()}>
-                ARTICLE I · SECTION 4.2 · PLATE Nº 01
+                <p>{t('about.intro')}</p>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* ── SECTION II: WEB MODE ── */}
+      {/* ── AUTHOR SECTION ── */}
+      <section style={{ padding: 'var(--az-section-y) 0' }}>
+        <div className="az-container">
+          <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
+            <span className="roman">I.</span>
+            <span className="sec-meta">Author · Gavin Chen</span>
+            <span className="page-count">001 / 003</span>
+          </div>
+          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px', display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+              <div style={{ flexShrink: 0 }}>
+                <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--az-paper-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', fontWeight: 700, color: 'var(--az-accent)', fontFamily: 'var(--az-font-display)' }}>G</div>
+              </div>
+              <div>
+                <h3 style={{ fontFamily: 'var(--az-font-display)', fontSize: '24px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--az-ink)', margin: '0 0 12px' }}>Gavin Chen</h3>
+                <p style={{ fontFamily: 'var(--az-font-mono)', fontSize: '11px', color: 'var(--az-ink-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '16px' }}>Solution Architect & Developer</p>
+                <p style={{ fontFamily: 'var(--az-font-body)', fontSize: '14px', color: 'var(--az-ink-soft)', lineHeight: 1.8, margin: 0 }}>
+                  {t('about.gavinBio')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── TEAM SECTION ── */}
       <section style={{ padding: 'var(--az-section-y) 0', background: 'var(--az-paper-dark)' }}>
         <div className="az-container">
           <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
             <span className="roman">II.</span>
-            <span className="sec-meta">Web Mode · in-session processing</span>
-            <span className="page-count">001 / 003</span>
-          </div>
-          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px' }}>
-              <h3 style={{
-                fontFamily: 'var(--az-font-display)',
-                fontSize: '24px',
-                fontWeight: 700,
-                letterSpacing: '-0.01em',
-                color: 'var(--az-ink)',
-                margin: '0 0 20px',
-                lineHeight: 1.2,
-              }}>
-                What happens <em>in your browser</em>
-              </h3>
-              <p style={{
-                fontFamily: 'var(--az-font-body)',
-                fontSize: '14px',
-                color: 'var(--az-ink-soft)',
-                lineHeight: 1.8,
-                margin: '0 0 24px',
-              }}>
-                {t('privacy.webSummary')}
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
-                {[
-                  { label: 'Session limit', value: '50 emails' },
-                  { label: 'Retention', value: 'None — cleared on exit' },
-                  { label: 'Passwords', value: 'Never stored' },
-                  { label: 'Model requests', value: 'Not persisted' },
-                ].map((item, i) => (
-                  <div key={i} style={{ padding: '16px', background: 'var(--az-paper-deep)', borderRadius: '12px', border: '1px solid var(--az-rule)' }}>
-                    <div style={{ fontFamily: 'var(--az-font-mono)', fontSize: '10px', color: 'var(--az-ink-faint)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>{item.label}</div>
-                    <div style={{ fontFamily: 'var(--az-font-display)', fontSize: '15px', fontWeight: 600, color: 'var(--az-ink)' }}>{item.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION III: DESKTOP MODE ── */}
-      <section style={{ padding: 'var(--az-section-y) 0' }}>
-        <div className="az-container">
-          <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
-            <span className="roman">III.</span>
-            <span className="sec-meta">Desktop Mode · local-first storage</span>
+            <span className="sec-meta">Team · MindRose</span>
             <span className="page-count">002 / 003</span>
           </div>
           <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px' }}>
-              <h3 style={{
-                fontFamily: 'var(--az-font-display)',
-                fontSize: '24px',
-                fontWeight: 700,
-                letterSpacing: '-0.01em',
-                color: 'var(--az-ink)',
-                margin: '0 0 20px',
-                lineHeight: 1.2,
-              }}>
-                What stays <em>on your machine</em>
+              <h3 style={{ fontFamily: 'var(--az-font-display)', fontSize: '20px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--az-ink)', margin: '0 0 24px' }}>
+                {t('about.team.title')}
               </h3>
-              <p style={{
-                fontFamily: 'var(--az-font-body)',
-                fontSize: '14px',
-                color: 'var(--az-ink-soft)',
-                lineHeight: 1.8,
-                margin: '0 0 24px',
-              }}>
-                {t('privacy.desktopSummary')}
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
                 {[
-                  { label: 'Max emails', value: '500' },
-                  { label: 'Retention', value: '5 days' },
-                  { label: 'Storage', value: 'Local SQLite' },
-                  { label: 'Passwords', value: 'Vault (P1)' },
-                ].map((item, i) => (
-                  <div key={i} style={{ padding: '16px', background: 'var(--az-paper-deep)', borderRadius: '12px', border: '1px solid var(--az-rule)' }}>
-                    <div style={{ fontFamily: 'var(--az-font-mono)', fontSize: '10px', color: 'var(--az-ink-faint)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>{item.label}</div>
-                    <div style={{ fontFamily: 'var(--az-font-display)', fontSize: '15px', fontWeight: 600, color: 'var(--az-ink)' }}>{item.value}</div>
+                  { name: 'Lindsay Lin', role: 'SEO & International Trade Specialist', initial: 'L', desc: t('about.team.lindsay') },
+                  { name: 'Angela Lee', role: 'Online Marketing Specialist', initial: 'A', desc: t('about.team.anthony') },
+                  { name: 'Simon L.', role: 'Backend & DevOps Engineer', initial: 'S', desc: t('about.team.simon') },
+                ].map((member, i) => (
+                  <div key={i} style={{ padding: '20px', background: 'var(--az-paper-deep)', borderRadius: '12px', border: '1px solid var(--az-rule)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--az-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 700, color: 'var(--az-paper)' }}>{member.initial}</div>
+                      <div>
+                        <div style={{ fontFamily: 'var(--az-font-display)', fontSize: '14px', fontWeight: 600, color: 'var(--az-ink)' }}>{member.name}</div>
+                        <div style={{ fontFamily: 'var(--az-font-mono)', fontSize: '10px', color: 'var(--az-ink-faint)', textTransform: 'uppercase' }}>{member.role}</div>
+                      </div>
+                    </div>
+                    <p style={{ fontFamily: 'var(--az-font-body)', fontSize: '13px', color: 'var(--az-ink-muted)', lineHeight: 1.6, margin: 0 }}>{member.desc}</p>
                   </div>
                 ))}
               </div>
@@ -259,52 +219,28 @@ export default function PrivacyPage() {
         </div>
       </section>
 
-      {/* ── SECTION IV: DISCLAIMERS ── */}
-      <section style={{ padding: 'var(--az-section-y) 0', background: 'var(--az-paper-dark)' }}>
+      {/* ── ABOUT MINDROSE ── */}
+      <section style={{ padding: 'var(--az-section-y) 0' }}>
         <div className="az-container">
           <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
-            <span className="roman">IV.</span>
-            <span className="sec-meta">Disclaimers · scope boundaries</span>
+            <span className="roman">III.</span>
+            <span className="sec-meta">About · MindRose Studio</span>
             <span className="page-count">003 / 003</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '800px', margin: '0 auto' }}>
-            {[
-              {
-                num: 'A',
-                title: 'LLM Provider Data',
-                content: t('privacy.models'),
-              },
-              {
-                num: 'B',
-                title: 'Email Provider Policy',
-                content: t('privacy.thirdParty'),
-              },
-            ].map((item) => (
-              <div key={item.num} className="reveal" ref={addReveal()} style={{
-                background: 'var(--az-paper)',
-                border: '1px solid var(--az-rule)',
-                borderRadius: 'var(--radius-card)',
-                padding: '32px',
-                position: 'relative',
-              }}>
-                <span className="az-card-num" style={{ position: 'absolute', top: '20px', right: '20px' }}>{item.num}</span>
-                <h4 style={{
-                  fontFamily: 'var(--az-font-display)',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  color: 'var(--az-ink)',
-                  margin: '0 0 12px',
-                  lineHeight: 1.3,
-                }}>{item.title}</h4>
-                <p style={{
-                  fontFamily: 'var(--az-font-body)',
-                  fontSize: '13px',
-                  color: 'var(--az-ink-muted)',
-                  lineHeight: 1.7,
-                  margin: 0,
-                }}>{item.content}</p>
+          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px' }}>
+              <h3 style={{ fontFamily: 'var(--az-font-display)', fontSize: '20px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--az-ink)', margin: '0 0 20px' }}>
+                {t('about.mindrose.title')}
+              </h3>
+              <p style={{ fontFamily: 'var(--az-font-body)', fontSize: '14px', color: 'var(--az-ink-soft)', lineHeight: 1.8, margin: '0 0 24px' }}>
+                {t('about.mindrose.desc')}
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '32px' }}>
+                <a href="mailto:hello@mindrose.xyz" style={{ fontFamily: 'var(--az-font-display)', fontSize: '13px', color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>hello@mindrose.xyz</a>
+                <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ fontFamily: 'var(--az-font-display)', fontSize: '13px', color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>mindrose.xyz</a>
+                <a href="https://github.com/GavinCnod" target="_blank" rel="noreferrer" style={{ fontFamily: 'var(--az-font-display)', fontSize: '13px', color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>GitHub</a>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
@@ -331,13 +267,10 @@ export default function PrivacyPage() {
           <div className="az-footer-info">
             <span className="az-footer-copy">
               <span className="pulse-dot" style={{ marginRight: '8px' }} />
-              MailMind v0.1 · Hackathon Edition · MMXXVI
+              MailMind v0.1.1 · Hackathon Edition · MMXXVI
             </span>
             <span className="az-footer-credit">
               <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Mindrose Team</a> · Apache-2.0 License
-            </span>
-            <span className="az-footer-copy">
-              Filed under: Compliance · Data Policy
             </span>
           </div>
         </div>

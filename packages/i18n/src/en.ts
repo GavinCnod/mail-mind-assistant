@@ -174,6 +174,22 @@ export const en = {
     fixture: 'Use sanitized sample data',
     realEmail: 'Use real email',
   },
+
+  // ---- About Page ----
+  about: {
+    intro: 'MailMind is built by Gavin Chen and the MindRose team — a small group of engineers and strategists who believe privacy-first software can solve real business problems.',
+    gavinBio: 'Gavin Chen leads product direction, technical implementation, and content strategy for this project, working together with the MindRose team on product delivery, marketing, and maintenance.',
+    team: {
+      title: 'The MindRose Team',
+      lindsay: 'Familiar with cross-border product marketing strategies and highly experienced in hands-on SEO, leading our SEO & GEO strategies.',
+      anthony: 'Expert in online marketing strategies, content creation, and analysis, helping products and services succeed in digital marketing.',
+      simon: 'Leads various server architecture designs, database optimizations, and cloud-native deployments.',
+    },
+    mindrose: {
+      title: 'About MindRose Studio',
+      desc: 'This project is open-sourced by Gavin Chen and the MindRose team. MindRose is a tech team focused on delivering lightweight digital solutions for small and medium manufacturers, logistics companies, and cross-border traders. We use AI and full-stack agile development (Next.js, React, etc.) to deliver applications that solve real business pain points within weeks.',
+    },
+  },
 } as const;
 
 export type TranslationShape = typeof en;

@@ -183,6 +183,7 @@ export default function LandingPage() {
         <Link href="/" className="az-nav-brand">MailMind</Link>
         <ul className="az-nav-links">
           <li><Link href="/experience">Experience</Link></li>
+          <li><Link href="/about">关于作者</Link></li>
           <li><Link href="/privacy">Privacy</Link></li>
           <li><a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer">GitHub</a></li>
         </ul>

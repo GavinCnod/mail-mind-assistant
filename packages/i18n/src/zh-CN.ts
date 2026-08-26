@@ -28,8 +28,8 @@ export const zhCN = {
   // ---- Landing Page ----
   landing: {
     title: 'MailMind',
-    subtitle: '只读 AI 邮件分诊助手',
-    tagline: '理解 · 判断 · 建议——不发送、不修改、不留存',
+    subtitle: '您的只读 AI 收件箱分诊助手',
+    tagline: '理解 · 判断 · 建议——不发送、不修改、不留存。',
     features: {
       readOnly: '只读访问',
       privacy: '隐私优先',
@@ -45,11 +45,11 @@ export const zhCN = {
     title: '协议与授权',
     description: '在使用 MailMind 之前，请阅读并同意以下条款：',
     checkboxes: {
-      userAgreement: '我已阅读并同意《用户协议》',
-      privacyPolicy: '我已阅读并同意《隐私说明》',
-      mailProcessingAuth: '我已授权 MailMind 读取我的邮件数据',
+      userAgreement: '我已阅读并同意服务条款',
+      privacyPolicy: '我已阅读并同意隐私政策',
+      mailProcessingAuth: '我授权 MailMind 读取我的邮件数据',
     },
-    notice: 'MailMind 仅读取您授权的邮件，不会发送、删除、移动或修改任何邮件。',
+    notice: 'MailMind 仅读取您明确授权的邮件。它不会发送、删除、移动或修改任何邮件。',
     connect: '连接邮箱',
     connected: '已连接',
     connecting: '连接中...',
@@ -65,98 +65,47 @@ export const zhCN = {
     ssl: 'SSL/TLS',
     starttls: 'STARTTLS',
     username: '用户名',
-    password: '应用专用密码',
+    password: '密码',
     passwordHint: '请使用应用专用密码，而非主密码',
     testConnection: '测试连接',
-    submit: '提交',
+    submit: '连接邮箱',
   },
 
-  // ---- Email Card ----
-  emailCard: {
-    generatedIn: '已按 {{language}} 生成',
-    regenerate: '按当前语言重新生成',
-    requiresAction: '需行动',
-    priority: {
-      P0: 'P0 立即关注',
-      P1: 'P1 今日处理',
-      P2: 'P2 可规划',
-      P3: 'P3 仅知悉',
-    },
-    deadline: '截止',
-    confidence: '置信度',
-    risk: '风险',
-    noDeadline: '无明确截止期',
-    actions: '建议行动',
-    facts: '关键事实',
-    summary: '摘要',
-  },
-
-  // ---- Feed / Filters ----
-  feed: {
-    sortBy: '排序方式',
-    byPriority: '按优先级',
-    byDate: '按时间',
-    filterByPriority: '优先级筛选',
-    filterByAction: '需行动',
-    filterByCategory: '分类筛选',
-    empty: '暂无邮件',
-    emptyHint: '完成协议授权后连接邮箱以查看邮件摘要',
-    loadMore: '加载更多',
-  },
-
-  // ---- Categories ----
+  // ---- Email Feed ----
   email: {
-    category: {
-      customer_order: '订单/客户',
-      logistics: '账单/物流',
-      meeting: '日程/会议',
-      billing: '账单提醒',
-      notification: '系统通知',
-      marketing: '营销',
-      social: '社交',
-      other: '其他',
-      needs_review: '需人工复核',
+    feed: {
+      title: '收件箱',
+      subtitle: '本地存储 · 隐私优先 · 只读分析',
+      empty: '暂无邮件。点击"同步邮件"开始使用。',
+      sync: '同步邮件',
+      syncing: '同步中...',
+      clear: '清除数据',
     },
-    generatedIn: '已按 {{language}} 生成',
-    regenerate: '按当前语言重新生成',
+    card: {
+      summary: '摘要',
+      priority: '优先级',
+      action: '行动建议',
+      deadline: '截止日期',
+      risk: '风险标记',
+      keyFacts: '关键信息',
+      requiresAction: '需要人工处理',
+      confidence: '置信度',
+      openSummary: '展开摘要',
+      closeSummary: '收起摘要',
+    },
+    filter: {
+      all: '全部',
+      highPriority: '高优先级',
+      needsAction: '需人工处理',
+      lowConfidence: '低置信度',
+    },
   },
 
-  // ---- Digest Panel ----
-  digest: {
-    title: '半日工作简报',
-    generate: '生成简报',
-    regenerate: '重新生成报告',
-    morning: '上午',
-    afternoon: '下午',
-    priorities: '重点事项',
-    actions: '建议行动',
-    risks: '风险与阻塞',
-    noAction: '无需处理',
-    empty: '暂无简报数据',
-    emptyHint: '分析邮件后可生成半日工作简报',
-  },
-
-  // ---- Settings ----
-  settings: {
-    title: '设置',
-    outputLanguage: 'AI 输出语言跟随界面语言',
-    dataRetention: '数据保留策略',
-    clearData: '清除所有本地数据',
-    clearConfirm: '此操作将删除所有本地邮件、摘要和简报数据，是否继续？',
-    accountManagement: '账号管理',
-  },
-
-  // ---- Error Messages ----
-  errors: {
-    AUTH_FAILED: '身份验证失败，请检查用户名或应用专用密码',
-    TLS_FAILED: 'TLS 连接失败，请检查加密方式与服务器证书',
-    PROTOCOL_UNSUPPORTED: '不支持的邮件协议，请切换 IMAP 或 POP3',
-    LIMIT_REACHED: '达到最大处理数量限制，请减少体验范围',
-    MODEL_UNAVAILABLE: '模型服务不可用，请检查 Base URL 和 API Key',
-    EMAIL_PARSE_FAILED: '该邮件无法解析，已跳过',
-    SCHEMA_VALIDATION_FAILED: '模型输出格式异常，请稍后重试',
-    SESSION_DISPOSED: '会话已结束，请重新开始体验',
-    UNKNOWN: '发生未知错误，请稍后重试',
+  // ---- Demo Mode ----
+  demo: {
+    mode: '演示模式',
+    fixture: '使用脱敏示例数据',
+    realEmail: '使用真实邮箱',
   },
 
   // ---- Privacy ----
@@ -168,11 +117,20 @@ export const zhCN = {
     thirdParty: '邮箱服务商的数据处理政策不受本隐私声明覆盖。',
   },
 
-  // ---- Demo Mode ----
-  demo: {
-    mode: '演示模式',
-    fixture: '使用脱敏示例数据',
-    realEmail: '使用真实邮箱',
+  // ---- About Page ----
+  about: {
+    intro: 'MailMind 由 Gavin Chen 与 MindRose 团队共同构建——一群相信隐私优先软件能解决真实业务问题的工程师与策略专家。',
+    gavinBio: 'Gavin Chen 负责这个项目的产品方向、技术实现与内容策略，并与 MindRose 团队一起完成产品部署、推广和维护。',
+    team: {
+      title: 'MindRose 团队',
+      lindsay: '熟悉跨国产品营销策略，有丰富的 SEO 实战经验，负责产品的 SEO & GEO 策略。',
+      anthony: '熟悉在线营销策略、内容创作与分析，帮助产品和服务在获得在线营销推广方面取得成功。',
+      simon: '主导各种服务端架构设计、数据库优化及云原生部署。',
+    },
+    mindrose: {
+      title: '关于 MindRose Studio',
+      desc: '本项目由 Gavin Chen 及 MindRose 团队开发并开源呈现。MindRose 是专注于为中小制造企业、物流公司及跨国贸易商提供轻量级数字化解决方案的科技团队。我们不卖虚无的"数字化转型"概念，而是通过 AI 技术与全栈敏捷开发（Next.js、React 等），在几周内为你交付解决实际业务痛点的应用。',
+    },
   },
 } as const;
 

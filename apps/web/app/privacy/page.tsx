@@ -88,7 +88,7 @@ function LocaleToggleStyled() {
         (e.currentTarget as HTMLButtonElement).style.color = 'var(--az-ink-soft)';
       }}
     >
-      <span style={{ fontFamily: 'var(--az-font-mono)', fontSize: '10px', color: 'var(--az-accent)' }}>⌘</span>
+      <span style={{ fontFamily: 'var(--az-font-mono)', fontSize: '10px', color: 'var(--az-accent)' }}>{isZh ? '中' : 'EN'}</span>
       {isZh ? 'EN' : '中文'}
     </button>
   );
@@ -127,25 +127,13 @@ export default function PrivacyPage() {
       <div className="side-rail side-rail-left">MailMind v0.1 · Read-Only · EST. 2025</div>
       <div className="side-rail side-rail-right">SECURE · PRIVATE · LOCAL-FIRST</div>
 
-      {/* ── Top Metadata Strip ── */}
-      <div className="az-meta-strip">
-        <div className="az-container">
-          <span>Vol. 01 / Issue Nº 00 · MMXXVI</span>
-          <span className="meta-pill">
-            <span className="pulse-dot" />
-            PRIVACY NOTICE
-          </span>
-          <span>Filed under: Compliance · Data Policy</span>
-        </div>
-      </div>
-
       {/* ── Navigation ── */}
       <nav className="az-nav">
         <Link href="/" className="az-nav-brand">MailMind</Link>
         <ul className="az-nav-links">
           <li><Link href="/experience">Experience</Link></li>
           <li><Link href="/privacy">Privacy</Link></li>
-          <li><a href="https://github.com/lifecycleResearch/mail-mind-assistant" target="_blank" rel="noreferrer">GitHub</a></li>
+          <li><a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer">GitHub</a></li>
         </ul>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
           <ThemeToggleStyled />
@@ -156,9 +144,9 @@ export default function PrivacyPage() {
       {/* ── HERO ── */}
       <header className="az-hero" style={{ paddingBottom: 'var(--az-section-y)' }}>
         <div className="az-container">
-          <div className="az-hero-inner" style={{ flexDirection: 'column', textAlign: 'center' }}>
-            <div>
-              <div className="az-eyebrow" ref={addReveal()}>Legal · Policy · Transparency</div>
+          <div className="az-hero-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ maxWidth: '800px' }}>
+              <div className="az-eyebrow" ref={addReveal()} style={{ justifyContent: 'center' }}>Legal · Policy · Transparency</div>
               <h1 className="az-headline" ref={addReveal()} style={{ maxWidth: '700px', margin: '0 auto' }}>
                 Your data, <em>never</em><br />
                 stored<span style={{ color: 'var(--az-accent)' }}>.</span>
@@ -177,13 +165,13 @@ export default function PrivacyPage() {
       {/* ── SECTION II: WEB MODE ── */}
       <section style={{ padding: 'var(--az-section-y) 0', background: 'var(--az-paper-dark)' }}>
         <div className="az-container">
-          <div className="sec-rule reveal" ref={addReveal()}>
+          <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
             <span className="roman">II.</span>
             <span className="sec-meta">Web Mode · in-session processing</span>
             <span className="page-count">001 / 003</span>
           </div>
-          <div className="reveal" ref={addReveal()}>
-            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px', maxWidth: '720px' }}>
+          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px' }}>
               <h3 style={{
                 fontFamily: 'var(--az-font-display)',
                 fontSize: '24px',
@@ -206,7 +194,7 @@ export default function PrivacyPage() {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
                 {[
-                  { label: 'Session limit', value: '5–10 emails' },
+                  { label: 'Session limit', value: '50 emails' },
                   { label: 'Retention', value: 'None — cleared on exit' },
                   { label: 'Passwords', value: 'Never stored' },
                   { label: 'Model requests', value: 'Not persisted' },
@@ -225,13 +213,13 @@ export default function PrivacyPage() {
       {/* ── SECTION III: DESKTOP MODE ── */}
       <section style={{ padding: 'var(--az-section-y) 0' }}>
         <div className="az-container">
-          <div className="sec-rule reveal" ref={addReveal()}>
+          <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
             <span className="roman">III.</span>
             <span className="sec-meta">Desktop Mode · local-first storage</span>
             <span className="page-count">002 / 003</span>
           </div>
-          <div className="reveal" ref={addReveal()}>
-            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px', maxWidth: '720px' }}>
+          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ background: 'var(--az-paper)', border: '1px solid var(--az-rule)', borderRadius: 'var(--radius-card)', padding: '40px' }}>
               <h3 style={{
                 fontFamily: 'var(--az-font-display)',
                 fontSize: '24px',
@@ -273,12 +261,12 @@ export default function PrivacyPage() {
       {/* ── SECTION IV: DISCLAIMERS ── */}
       <section style={{ padding: 'var(--az-section-y) 0', background: 'var(--az-paper-dark)' }}>
         <div className="az-container">
-          <div className="sec-rule reveal" ref={addReveal()}>
+          <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
             <span className="roman">IV.</span>
             <span className="sec-meta">Disclaimers · scope boundaries</span>
             <span className="page-count">003 / 003</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '800px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '800px', margin: '0 auto' }}>
             {[
               {
                 num: 'A',
@@ -325,7 +313,7 @@ export default function PrivacyPage() {
         <div className="az-container" style={{ paddingBottom: '80px' }}>
           <Link href="/experience" className="az-btn-primary reveal">
             {t('landing.cta')}
-            <span className="arrow">↗</span>
+            <span className="arrow">{`›`}</span>
           </Link>
         </div>
       </section>
@@ -345,7 +333,7 @@ export default function PrivacyPage() {
               MailMind v0.1 · Hackathon Edition · MMXXVI
             </span>
             <span className="az-footer-credit">
-              Edited by the MailMind team · Apache-2.0 License
+              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Mindrose Team</a> · Apache-2.0 License
             </span>
             <span className="az-footer-copy">
               Filed under: Compliance · Data Policy

@@ -395,7 +395,7 @@ body::before {
 /* ── Nav ── */
 .az-nav {
   position: fixed;
-  top: 28px;  /* below meta strip */
+  top: 0;
   left: 0;
   right: 0;
   height: 64px;
@@ -456,7 +456,7 @@ body::before {
 
 /* ── Hero ── */
 .az-hero {
-  min-height: calc(100vh - 28px);
+  min-height: calc(100vh - 64px);
   padding-top: 64px;
   display: flex;
   flex-direction: column;
@@ -468,7 +468,7 @@ body::before {
   grid-template-columns: 0.78fr 1.22fr;
   gap: 48px;
   align-items: center;
-  min-height: calc(100vh - 28px - 64px);
+  min-height: calc(100vh - 64px);
   padding: 40px 0;
 }
 @media (max-width: 1080px) {

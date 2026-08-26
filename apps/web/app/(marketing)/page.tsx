@@ -178,25 +178,13 @@ export default function LandingPage() {
       <div className="side-rail side-rail-left">MailMind v0.1 · Read-Only · EST. 2025</div>
       <div className="side-rail side-rail-right">SECURE · PRIVATE · LOCAL-FIRST</div>
 
-      {/* ── Top Metadata Strip ── */}
-      <div className="az-meta-strip">
-        <div className="az-container">
-          <span>Vol. 01 / Issue Nº 00 · MMXXVI</span>
-          <span className="meta-pill">
-            <span className="pulse-dot" />
-            SECURE CONNECTION
-          </span>
-          <span>Filed under: Privacy · AI · Inbox Triage</span>
-        </div>
-      </div>
-
       {/* ── Navigation ── */}
       <nav className="az-nav">
         <Link href="/" className="az-nav-brand">MailMind</Link>
         <ul className="az-nav-links">
           <li><Link href="/experience">Experience</Link></li>
           <li><Link href="/privacy">Privacy</Link></li>
-          <li><a href="https://github.com/lifecycleResearch/mail-mind-assistant" target="_blank" rel="noreferrer">GitHub</a></li>
+          <li><a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer">GitHub</a></li>
         </ul>
         {/* Theme + Locale toggles — visible on all screen sizes */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
@@ -225,7 +213,7 @@ export default function LandingPage() {
                   {t('landing.cta')}
                   <span className="arrow">↗</span>
                 </Link>
-                <a href="https://github.com/lifecycleResearch/mail-mind-assistant" target="_blank" rel="noreferrer" className="az-btn-ghost">
+                <a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer" className="az-btn-ghost">
                   View on GitHub
                 </a>
               </div>
@@ -422,7 +410,7 @@ export default function LandingPage() {
               {t('landing.cta')}
               <span className="arrow">↗</span>
             </Link>
-            <a href="https://github.com/lifecycleResearch/mail-mind-assistant" target="_blank" rel="noreferrer" className="az-btn-ghost">
+            <a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer" className="az-btn-ghost">
               Source Code
             </a>
           </div>
@@ -445,7 +433,7 @@ export default function LandingPage() {
               MailMind v0.1 · Hackathon Edition · MMXXVI
             </span>
             <span className="az-footer-credit">
-              Edited by the MailMind team · Apache-2.0 License
+              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Mindrose Team</a> · Apache-2.0 License
             </span>
             <span className="az-footer-copy">
               Filed under: AI · Privacy · Read-only

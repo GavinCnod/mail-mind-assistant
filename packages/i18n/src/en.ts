@@ -58,10 +58,15 @@ export const en = {
       privacyPolicy: 'I have read and agree to the Privacy Policy',
       mailProcessingAuth: 'I authorize MailMind to read my email data',
     },
+    tooltips: {
+      userAgreement: 'MailMind strictly adheres to a read-only policy: it never sends, deletes, moves, or modifies any email. Additionally, MailMind does not store any content information or personally identifiable information.',
+      privacyPolicy: 'Your account password is never stored in any database nor transmitted to us or any third-party storage services. Web session information is retained only in local browser cache and automatically cleared after the session ends.',
+    },
     notice: 'MailMind only reads emails you explicitly authorize. It never sends, deletes, moves, or modifies any email.',
-    connect: 'Connect Email',
+    connect: 'Confirm Authorization',
     connected: 'Connected',
     connecting: 'Connecting...',
+    confirmAuth: 'Confirm Authorization',
   },
 
   // ---- Connection Form ----
@@ -217,8 +222,8 @@ export const en = {
     ctaSectionMeta: 'Get started · free & open source',
     ctaHeadline: 'Your inbox,<br /><em>understood.</em><span style="color: var(--az-accent)">.</span>',
     footerBrand: 'MailMind v0.1 · Hackathon Edition · MMXXVI',
-    footerCredit: 'by Mindrose Team',
-    footerLicense: 'Apache-2.0 License',
+    footerCredit: 'by Gavin Chen from Mindrose Team',
+    footerLicense: 'MIT License',
     footerFiled: 'Filed under: AI · Privacy · Read-only',
   },
 

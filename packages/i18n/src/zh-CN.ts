@@ -58,10 +58,15 @@ export const zhCN = {
       privacyPolicy: '我已阅读并同意隐私政策',
       mailProcessingAuth: '我授权 MailMind 读取我的邮件数据',
     },
+    tooltips: {
+      userAgreement: 'MailMind 严格遵守只读原则，不发送、删除、移动或修改任何邮件；此外 MailMind 不保存您的任何内容信息或个人识别信息。',
+      privacyPolicy: '您输入的账号密码永不存入数据库或传输至我们或第三方的存储服务，Web端信息仅保留本地浏览器缓存，会话结束后自动清除。',
+    },
     notice: 'MailMind 仅读取您明确授权的邮件。它不会发送、删除、移动或修改任何邮件。',
-    connect: '连接邮箱',
+    connect: '确认授权',
     connected: '已连接',
     connecting: '连接中...',
+    confirmAuth: '确认授权',
   },
 
   // ---- Connection Form ----
@@ -217,8 +222,8 @@ export const zhCN = {
     ctaSectionMeta: '开始使用 · 免费开源',
     ctaHeadline: '你的收件箱，<br /><em>已被理解。</em><span style="color: var(--az-accent)">。</span>',
     footerBrand: 'MailMind v0.1 · 黑客松版 · MMXXVI',
-    footerCredit: 'Mindrose Team 出品',
-    footerLicense: 'Apache-2.0 许可证',
+    footerCredit: 'by Gavin Chen from Mindrose Team',
+    footerLicense: 'MIT 许可证',
     footerFiled: '分类：AI · 隐私 · 只读',
   },
 

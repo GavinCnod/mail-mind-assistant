@@ -332,10 +332,10 @@ export default function PrivacyPage() {
           <div className="az-footer-info">
             <span className="az-footer-copy">
               <span className="pulse-dot" style={{ marginRight: '8px' }} />
-              MailMind v0.1 · Hackathon Edition · MMXXVI
+              MailMind v0.1.1 · Hackathon Edition · MMXXVI
             </span>
             <span className="az-footer-credit">
-              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Mindrose Team</a> · Apache-2.0 License
+              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Gavin Chen from Mindrose Team</a> · MIT License
             </span>
             <span className="az-footer-copy">
               Filed under: Compliance · Data Policy

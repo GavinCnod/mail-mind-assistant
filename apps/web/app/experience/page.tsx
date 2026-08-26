@@ -357,36 +357,111 @@ export default function ExperiencePage() {
                   margin: '0 0 32px',
                 }}>{t('consent.description')}</p>
 
+                <style>{`
+                  .consent-item:hover .consent-tooltip-text {
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                  }
+                  .consent-item:hover .consent-info-icon {
+                    background: var(--az-accent);
+                    color: #1E3932;
+                  }
+                `}</style>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
                   {[
-                    { key: 'userAgreement', text: t('consent.checkboxes.userAgreement') },
-                    { key: 'privacyPolicy', text: t('consent.checkboxes.privacyPolicy') },
+                    { 
+                      key: 'userAgreement', 
+                      text: t('consent.checkboxes.userAgreement'),
+                      tooltip: t('consent.tooltips.userAgreement')
+                    },
+                    { 
+                      key: 'privacyPolicy', 
+                      text: t('consent.checkboxes.privacyPolicy'),
+                      tooltip: t('consent.tooltips.privacyPolicy')
+                    },
                     { key: 'mailProcessingAuth', text: t('consent.checkboxes.mailProcessingAuth') },
-                  ].map(({ key, text }) => (
-                    <label key={key} style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '12px',
-                      cursor: 'pointer',
-                      padding: '16px',
-                      background: 'var(--az-paper-deep)',
-                      borderRadius: '12px',
-                      border: agreed[key as keyof typeof agreed] ? '1px solid var(--az-accent)' : '1px solid var(--az-rule)',
-                      transition: 'border-color 0.18s ease',
-                    }}>
-                      <input
-                        type="checkbox"
-                        checked={agreed[key as keyof typeof agreed]}
-                        onChange={(e) => setAgreed(p => ({ ...p, [key]: e.target.checked }))}
-                        style={{ width: '18px', height: '18px', marginTop: '2px', accentColor: 'var(--az-accent)' }}
-                      />
-                      <span style={{
-                        fontFamily: 'var(--az-font-body)',
-                        fontSize: '13px',
-                        color: 'var(--az-ink-soft)',
-                        lineHeight: 1.6,
-                      }}>{text}</span>
-                    </label>
+                  ].map(({ key, text, tooltip }) => (
+                    <div key={key} className="consent-item" style={{ position: 'relative' }}>
+                      <label style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '12px',
+                        cursor: 'pointer',
+                        padding: '16px',
+                        background: 'var(--az-paper-deep)',
+                        borderRadius: '12px',
+                        border: agreed[key as keyof typeof agreed] ? '1px solid var(--az-accent)' : '1px solid var(--az-rule)',
+                        transition: 'border-color 0.18s ease',
+                        position: 'relative',
+                      }}>
+                        <input
+                          type="checkbox"
+                          checked={agreed[key as keyof typeof agreed]}
+                          onChange={(e) => setAgreed(p => ({ ...p, [key]: e.target.checked }))}
+                          style={{ width: '18px', height: '18px', marginTop: '2px', accentColor: 'var(--az-accent)' }}
+                        />
+                        <span style={{
+                          fontFamily: 'var(--az-font-body)',
+                          fontSize: '13px',
+                          color: 'var(--az-ink-soft)',
+                          lineHeight: 1.6,
+                          flex: 1,
+                        }}>{text}</span>
+                        {tooltip && (
+                          <>
+                            <span
+                              className="consent-info-icon"
+                              style={{
+                                flexShrink: 0,
+                                width: '16px',
+                                height: '16px',
+                                borderRadius: '50%',
+                                background: 'var(--az-rule-strong)',
+                                color: 'var(--az-paper)',
+                                fontSize: '10px',
+                                fontWeight: 700,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                letterSpacing: '0.02em',
+                                transition: 'background 0.15s ease, color 0.15s ease',
+                              }}
+                            >
+                              i
+                            </span>
+                            <span
+                              className="consent-tooltip-text"
+                              style={{
+                                position: 'absolute',
+                                bottom: 'calc(100% + 8px)',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                backgroundColor: 'var(--az-paper-deep)',
+                                border: '1px solid var(--az-rule-strong)',
+                                borderRadius: '8px',
+                                padding: '8px 12px',
+                                fontFamily: 'var(--az-font-body)',
+                                fontSize: '11px',
+                                color: 'var(--az-ink-muted)',
+                                whiteSpace: 'normal',
+                                maxWidth: '280px',
+                                width: 'max-content',
+                                lineHeight: 1.5,
+                                zIndex: 100,
+                                boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                                pointerEvents: 'none',
+                                opacity: 0,
+                                visibility: 'hidden',
+                                transition: 'opacity 0.15s ease, visibility 0.15s ease',
+                              }}
+                            >
+                              {tooltip}
+                            </span>
+                          </>
+                        )}
+                      </label>
+                    </div>
                   ))}
                 </div>
 
@@ -417,7 +492,7 @@ export default function ExperiencePage() {
                     transition: 'all 0.18s ease',
                   }}
                 >
-                  {allChecked ? t('consent.connect') : t('consent.connecting')}
+                  {allChecked ? t('consent.confirmAuth') : t('consent.connect')}
                 </button>
               </div>
             </div>
@@ -700,10 +775,10 @@ export default function ExperiencePage() {
           <div className="az-footer-info">
             <span className="az-footer-copy">
               <span className="pulse-dot" style={{ marginRight: '8px' }} />
-              MailMind v0.1 · Hackathon Edition · MMXXVI
+              MailMind v0.1.1 · Hackathon Edition · MMXXVI
             </span>
             <span className="az-footer-credit">
-              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Mindrose Team</a> · Apache-2.0 License
+              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Gavin Chen from Mindrose Team</a> · MIT License
             </span>
             <span className="az-footer-copy">
               Filed under: Experience · Analysis

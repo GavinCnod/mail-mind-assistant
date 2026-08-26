@@ -3,7 +3,7 @@
 *.d.ts
 *.js.map
 *.d.ts.map
-dist/
+-dist/
 build/
 .node_modules/
 
@@ -63,4 +63,3 @@ apps/web/.next/
 
 # TypeScript build info
 *.tsbuildinfo
-

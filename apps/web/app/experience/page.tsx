@@ -162,23 +162,6 @@ export default function ExperiencePage() {
         </div>
       </nav>
 
-      {/* ── HERO ── */}
-      <header className="az-hero">
-        <div className="az-container">
-          <div className="az-hero-inner">
-            <div>
-              <div className="az-eyebrow" ref={addReveal()} dangerouslySetInnerHTML={{ __html: t('experience.headline') }} />
-              <div className="az-body" ref={addReveal()}>
-                <p>{t('landing.tagline')}</p>
-              </div>
-              <div style={{ marginTop: '32px', fontFamily: 'var(--az-font-mono)', fontSize: '11px', color: 'var(--az-ink-faint)', letterSpacing: '0.04em' }} ref={addReveal()}>
-                {t('experience.modeLabel')}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* ── MAIN CONTENT ── */}
       <section style={{ padding: 'var(--az-section-y) 0' }}>
         <div className="az-container">

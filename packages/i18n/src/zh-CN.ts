@@ -184,6 +184,44 @@ export const zhCN = {
     realEmail: '使用真实邮箱',
   },
 
+  // ---- Landing Page (Extended) ----
+  landingExt: {
+    sideRailLeft: 'MailMind v0.1 · 只读 · 创建于 2026',
+    sideRailRight: '安全 · 隐私优先 · 本地优先',
+    heroEyebrow: '只读 AI · 收件箱分诊',
+    heroHeadline: '理解你的<br />收件箱，<br />绝不发送<span style="color: var(--az-accent)">。</span>',
+    sectionIIMeta: '数据统计 · 零写入操作 · 已验证',
+    stats: {
+      emailsWritten: '发送邮件数',
+      deletions: '删除邮件数',
+      daysMaxRetention: '最大留存天数',
+      localProcessing: '本地处理率',
+    },
+    sectionIIIMeta: '功能 · 只读分诊系统',
+    featuresHeadline: '设计即安全，隐私优先<span style="color: var(--az-accent)">。</span>',
+    features: [
+      { tag: '只读', title: '仅读取权限', desc: 'IMAP EXAMINE / POP3 LIST — 无 STORE、APPEND、COPY、DELETE 操作。您的邮箱保持原样。' },
+      { tag: '隐私', title: '隐私优先', desc: '密码永不落盘。邮件内容最多留存 5 天（桌面端）。所有数据传输均加密。' },
+      { tag: 'AI 分诊', title: 'AI 结构化摘要', desc: 'LLM 驱动分析，生成带优先级和行动建议的结构化摘要——从不自动回复。' },
+      { tag: '本地优先', title: '本地优先桌面端', desc: '桌面应用所有处理均在本地完成。Web 端需明确授权，仅会话内运行。' },
+    ],
+    sectionIVMeta: '工作流程 · 从连接到洞察的四个步骤',
+    howItWorks: '工作原理<span style="color: var(--az-accent)">。</span>',
+    workflowSubtitle: '从协议握手到结构化摘要——每一步都是只读、加密且临时的。',
+    workflowSteps: [
+      { num: 'I', title: '协议认证', desc: '启用只读模式的 IMAP/POP3 CONNECT' },
+      { num: 'II', title: '加密连接', desc: '建立 STARTTLS / STLS 安全通道' },
+      { num: 'III', title: 'AI 分析', desc: '本地 LLM 解析并结构化邮件内容' },
+      { num: 'IV', title: '读取摘要', desc: '优先级分诊交付——零持久化写入' },
+    ],
+    ctaSectionMeta: '开始使用 · 免费开源',
+    ctaHeadline: '你的收件箱，<br /><em>已被理解。</em><span style="color: var(--az-accent)">。</span>',
+    footerBrand: 'MailMind v0.1 · 黑客松版 · MMXXVI',
+    footerCredit: 'Mindrose Team 出品',
+    footerLicense: 'Apache-2.0 许可证',
+    footerFiled: '分类：AI · 隐私 · 只读',
+  },
+
   // ---- About Page ----
   about: {
     intro: 'MailMind 由 Gavin Chen 与 MindRose 团队共同构建——一群相信隐私优先软件能解决真实业务问题的工程师与策略专家。',

@@ -124,7 +124,7 @@ export default function PrivacyPage() {
     <div style={{ minHeight: '100vh', background: 'var(--az-paper)', position: 'relative' }}>
 
       {/* ── Side Rails ── */}
-      <div className="side-rail side-rail-left">MailMind v0.1 · Read-Only · EST. 2025</div>
+      <div className="side-rail side-rail-left">MailMind v0.1 · Read-Only · EST. 2026</div>
       <div className="side-rail side-rail-right">SECURE · PRIVATE · LOCAL-FIRST</div>
 
       {/* ── Navigation ── */}

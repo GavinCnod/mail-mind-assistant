@@ -184,6 +184,44 @@ export const en = {
     realEmail: 'Use real email',
   },
 
+  // ---- Landing Page (Extended) ----
+  landingExt: {
+    sideRailLeft: 'MailMind v0.1 · Read-Only · EST. 2026',
+    sideRailRight: 'SECURE · PRIVATE · LOCAL-FIRST',
+    heroEyebrow: 'Read-only AI · Inbox Triage',
+    heroHeadline: 'Understand<br />your inbox,<br />never send<span style="color: var(--az-accent)">.</span>',
+    sectionIIMeta: 'By the numbers · zero write operations · verified',
+    stats: {
+      emailsWritten: 'Emails written',
+      deletions: 'Deletions',
+      daysMaxRetention: 'Days max retention',
+      localProcessing: 'Local processing',
+    },
+    sectionIIIMeta: 'Capabilities · read-only triage system',
+    featuresHeadline: 'Safe by <em>design,</em> secure<span style="color: var(--az-accent)">.</span>',
+    features: [
+      { tag: 'Read-only', title: 'Read Access Only', desc: 'IMAP EXAMINE / POP3 LIST — no STORE, APPEND, COPY, or DELETE. Your mailbox stays exactly as you left it.' },
+      { tag: 'Privacy', title: 'Privacy First', desc: 'Passwords never touch disk. Email content is retained for at most 5 days on the local Desktop. Nothing leaves your machine unencrypted.' },
+      { tag: 'AI Triage', title: 'AI Structured Summaries', desc: 'LLM-powered analysis produces structured summaries with priority levels and action recommendations — never automated responses.' },
+      { tag: 'Local-first', title: 'Local-first Desktop', desc: 'Desktop application processes everything locally. Web experience requires explicit consent and runs in-session only.' },
+    ],
+    sectionIVMeta: 'Workflow · four steps from connection to insight',
+    howItWorks: 'How it <em>works,</em><span style="color: var(--az-accent)">.</span>',
+    workflowSubtitle: 'From protocol handshake to structured summary — every step is read-only, encrypted, and ephemeral.',
+    workflowSteps: [
+      { num: 'I', title: 'Protocol Auth', desc: 'IMAP/POP3 CONNECT with read-only mode enabled' },
+      { num: 'II', title: 'Encrypted Link', desc: 'STARTTLS / STLS secured channel established' },
+      { num: 'III', title: 'AI Analysis', desc: 'Local LLM parses & structures email content' },
+      { num: 'IV', title: 'Read Summary', desc: 'Priority triage delivered — zero writes persisted' },
+    ],
+    ctaSectionMeta: 'Get started · free & open source',
+    ctaHeadline: 'Your inbox,<br /><em>understood.</em><span style="color: var(--az-accent)">.</span>',
+    footerBrand: 'MailMind v0.1 · Hackathon Edition · MMXXVI',
+    footerCredit: 'by Mindrose Team',
+    footerLicense: 'Apache-2.0 License',
+    footerFiled: 'Filed under: AI · Privacy · Read-only',
+  },
+
   // ---- About Page ----
   about: {
     intro: 'MailMind is built by Gavin Chen and the MindRose team — a small group of engineers and strategists who believe privacy-first software can solve real business problems.',

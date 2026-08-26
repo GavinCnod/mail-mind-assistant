@@ -61,3 +61,6 @@ node_modules/
 # Next.js
 apps/web/.next/
 
+# TypeScript build info
+*.tsbuildinfo
+

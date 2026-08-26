@@ -7,15 +7,14 @@ import { type LocaleContextValue } from './types';
 
 type TranslationDict = typeof zhCN;
 
-function getValue(obj: Record<string, unknown>, path: string): string {
+function getValue(obj: Record<string, unknown>, path: string): unknown {
   const keys = path.split('.');
   let current: unknown = obj;
   for (const key of keys) {
     if (current == null || typeof current !== 'object') return path;
     current = (current as Record<string, unknown>)[key];
   }
-  if (typeof current === 'string') return current;
-  return path;
+  return current;
 }
 
 function interpolate(template: string, params: Record<string, string | number>): string {
@@ -42,6 +41,7 @@ const LocaleContext = createContext<LocaleContextValue>({
   locale: 'en',
   setLocale: () => {},
   t: () => '',
+  getObject: () => undefined,
 });
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
@@ -56,13 +56,21 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   const t = (key: string, params?: Record<string, string | number>): string => {
     const dict = dictionaries[locale] ?? dictionaries['en'];
-    let value = getValue(dict as unknown as Record<string, unknown>, key) as string;
-    if (params) value = interpolate(value, params);
-    return value;
+    const value = getValue(dict as unknown as Record<string, unknown>, key);
+    if (typeof value === 'string') {
+      if (params) return interpolate(value, params);
+      return value;
+    }
+    return key;
+  };
+
+  const getObject = (key: string): unknown => {
+    const dict = dictionaries[locale] ?? dictionaries['en'];
+    return getValue(dict as unknown as Record<string, unknown>, key);
   };
 
   return (
-    <LocaleContext.Provider value={{ locale, setLocale, t }}>
+    <LocaleContext.Provider value={{ locale, setLocale, t, getObject }}>
       {children}
     </LocaleContext.Provider>
   );

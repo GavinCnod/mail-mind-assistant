@@ -146,7 +146,7 @@ function LocaleToggleStyled() {
 }
 
 export default function LandingPage() {
-  const { t } = useLocale();
+  const { t, getObject } = useLocale();
   const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -171,12 +171,31 @@ export default function LandingPage() {
     return (ref: HTMLDivElement | null) => { revealRefs.current[i] = ref; };
   };
 
+  // Pre-load translations for arrays to avoid repeated calls
+  const stats = [
+    { num: '0', label: t('landingExt.stats.emailsWritten'), accent: true },
+    { num: '0', label: t('landingExt.stats.deletions'), accent: false },
+    { num: '5', label: t('landingExt.stats.daysMaxRetention'), accent: false },
+    { num: '100%', label: t('landingExt.stats.localProcessing'), accent: false },
+  ];
+
+  const features = getObject('landingExt.features') as Array<{ tag: string; title: string; desc: string }> || [];
+  const workflowSteps = getObject('landingExt.workflowSteps') as Array<{ num: string; title: string; desc: string }> || [];
+
+  // Helper to get icon based on feature tag
+  const getFeatureIcon = (tag: string): string => {
+    if (tag.includes('Read-only') || tag.includes('只读')) return '🔒';
+    if (tag.includes('Privacy') || tag.includes('隐私')) return '🛡️';
+    if (tag.includes('AI Triage') || tag.includes('AI 分诊')) return '🤖';
+    return '💻';
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--az-paper)', position: 'relative' }}>
 
       {/* ── Side Rails ── */}
-      <div className="side-rail side-rail-left">MailMind v0.1 · Read-Only · EST. 2025</div>
-      <div className="side-rail side-rail-right">SECURE · PRIVATE · LOCAL-FIRST</div>
+      <div className="side-rail side-rail-left">{t('landingExt.sideRailLeft')}</div>
+      <div className="side-rail side-rail-right">{t('landingExt.sideRailRight')}</div>
 
       {/* ── Navigation ── */}
       <nav className="az-nav">
@@ -200,12 +219,8 @@ export default function LandingPage() {
           <div className="az-hero-inner">
             {/* Left: Editorial copy */}
             <div>
-              <div className="az-eyebrow" ref={addReveal()}>Read-only AI · Inbox Triage</div>
-              <h1 className="az-headline" ref={addReveal()}>
-                Understand<br />
-                <em>your inbox,</em><br />
-                never send<span style={{ color: 'var(--az-accent)' }}>.</span>
-              </h1>
+              <div className="az-eyebrow" ref={addReveal()}>{t('landingExt.heroEyebrow')}</div>
+              <h1 className="az-headline" ref={addReveal()} dangerouslySetInnerHTML={{ __html: t('landingExt.heroHeadline') }} />
               <div className="az-body" ref={addReveal()}>
                 <p>{t('landing.tagline')}</p>
               </div>
@@ -237,16 +252,11 @@ export default function LandingPage() {
         <div className="az-container">
           <div className="sec-rule reveal" ref={addReveal()}>
             <span className="roman">II.</span>
-            <span className="sec-meta">By the numbers · zero write operations · verified</span>
+            <span className="sec-meta">{t('landingExt.sectionIIMeta')}</span>
             <span className="page-count">002 / 004</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '24px' }}>
-            {[
-              { num: '0', label: 'Emails written', accent: true },
-              { num: '0', label: 'Deletions', accent: false },
-              { num: '5', label: 'Days max retention', accent: false },
-              { num: '100%', label: 'Local processing', accent: false },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <div key={i} className="reveal" ref={addReveal()} style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', textAlign: 'center' }}>
                 <div className={`az-stat-ring ${stat.accent ? 'az-stat-ring--accent' : ''}`}>{stat.num}</div>
                 <span style={{ fontFamily: 'var(--az-font-body)', fontSize: '12px', color: 'var(--az-ink-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{stat.label}</span>
@@ -261,51 +271,20 @@ export default function LandingPage() {
         <div className="az-container">
           <div className="sec-rule reveal" ref={addReveal()}>
             <span className="roman">III.</span>
-            <span className="sec-meta">Capabilities · read-only triage system</span>
+            <span className="sec-meta">{t('landingExt.sectionIIIMeta')}</span>
             <span className="page-count">003 / 004</span>
           </div>
 
-          <h2 className="az-headline reveal" ref={addReveal()} style={{ fontSize: 'clamp(32px, 5vw, 56px)', marginBottom: '48px' }}>
-            Safe by <em>design,</em> secure<span style={{ color: 'var(--az-accent)' }}>.</span>
-          </h2>
+          <h2 className="az-headline reveal" ref={addReveal()} style={{ fontSize: 'clamp(32px, 5vw, 56px)', marginBottom: '48px' }} dangerouslySetInnerHTML={{ __html: t('landingExt.featuresHeadline') }} />
 
           <div className="az-features-grid">
-            {[
-              {
-                num: '01',
-                tag: 'Read-only',
-                icon: '🔒',
-                title: 'Read Access Only',
-                desc: 'IMAP EXAMINE / POP3 LIST — no STORE, APPEND, COPY, or DELETE. Your mailbox stays exactly as you left it.',
-              },
-              {
-                num: '02',
-                tag: 'Privacy',
-                icon: '🛡️',
-                title: 'Privacy First',
-                desc: 'Passwords never touch disk. Email content is retained for at most 5 days on the local Desktop. Nothing leaves your machine unencrypted.',
-              },
-              {
-                num: '03',
-                tag: 'AI Triage',
-                icon: '🤖',
-                title: 'AI Structured Summaries',
-                desc: 'LLM-powered analysis produces structured summaries with priority levels and action recommendations — never automated responses.',
-              },
-              {
-                num: '04',
-                tag: 'Local-first',
-                icon: '💻',
-                title: 'Local-first Desktop',
-                desc: 'Desktop application processes everything locally. Web experience requires explicit consent and runs in-session only.',
-              },
-            ].map((feature) => (
-              <div key={feature.num} className="az-card reveal" ref={addReveal()}>
+            {features.map((feature, idx) => (
+              <div key={idx} className="az-card reveal" ref={addReveal()}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                  <span className="az-card-num">{feature.num}</span>
+                  <span className="az-card-num">{String(idx + 1).padStart(2, '0')}</span>
                   <span className="meta-pill" style={{ fontSize: '9px' }}>{feature.tag}</span>
                 </div>
-                <div style={{ fontSize: '28px', marginBottom: '12px' }}>{feature.icon}</div>
+                <div style={{ fontSize: '28px', marginBottom: '12px' }}>{getFeatureIcon(feature.tag)}</div>
                 <h3 style={{
                   fontFamily: 'var(--az-font-display)',
                   fontSize: '17px',
@@ -349,24 +328,17 @@ export default function LandingPage() {
         <div className="az-container">
           <div className="sec-rule reveal" ref={addReveal()}>
             <span className="roman">IV.</span>
-            <span className="sec-meta">Workflow · four steps from connection to insight</span>
+            <span className="sec-meta">{t('landingExt.sectionIVMeta')}</span>
             <span className="page-count">004 / 004</span>
           </div>
 
-          <h2 className="az-headline reveal" ref={addReveal()} style={{ fontSize: 'clamp(32px, 5vw, 56px)', marginBottom: '16px' }}>
-            How it <em>works,</em><span style={{ color: 'var(--az-accent)' }}>.</span>
-          </h2>
+          <h2 className="az-headline reveal" ref={addReveal()} style={{ fontSize: 'clamp(32px, 5vw, 56px)', marginBottom: '16px' }} dangerouslySetInnerHTML={{ __html: t('landingExt.howItWorks') }} />
           <p className="az-body reveal" ref={addReveal()} style={{ marginBottom: '56px' }}>
-            From protocol handshake to structured summary — every step is read-only, encrypted, and ephemeral.
+            {t('landingExt.workflowSubtitle')}
           </p>
 
           <div className="az-steps reveal" ref={addReveal()}>
-            {[
-              { num: 'I', title: 'Protocol Auth', desc: 'IMAP/POP3 CONNECT with read-only mode enabled' },
-              { num: 'II', title: 'Encrypted Link', desc: 'STARTTLS / STLS secured channel established' },
-              { num: 'III', title: 'AI Analysis', desc: 'Local LLM parses & structures email content' },
-              { num: 'IV', title: 'Read Summary', desc: 'Priority triage delivered — zero writes persisted' },
-            ].map((step, i) => (
+            {workflowSteps.map((step, i) => (
               <div key={step.num} className="az-step">
                 <div className="az-step-num">{step.num}</div>
                 <div className="az-step-title">{step.title}</div>
@@ -383,12 +355,10 @@ export default function LandingPage() {
         <div className="az-container" style={{ textAlign: 'center', paddingBottom: '80px' }}>
           <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '400px', margin: '0 auto 48px' }}>
             <span className="roman" />
-            <span className="sec-meta">Get started · free & open source</span>
+            <span className="sec-meta">{t('landingExt.ctaSectionMeta')}</span>
             <span className="page-count" />
           </div>
-          <h2 className="az-headline reveal" ref={addReveal()} style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>
-            Your inbox,<br /><em>understood.</em><span style={{ color: 'var(--az-accent)' }}>.</span>
-          </h2>
+          <h2 className="az-headline reveal" ref={addReveal()} style={{ fontSize: 'clamp(36px, 6vw, 72px)' }} dangerouslySetInnerHTML={{ __html: t('landingExt.ctaHeadline') }} />
           <div className="reveal" ref={addReveal()} style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '40px', flexWrap: 'wrap' }}>
             <Link href="/experience" className="az-btn-primary">
               {t('landing.cta')}
@@ -414,13 +384,13 @@ export default function LandingPage() {
           <div className="az-footer-info">
             <span className="az-footer-copy">
               <span className="pulse-dot" style={{ marginRight: '8px' }} />
-              MailMind v0.1 · Hackathon Edition · MMXXVI
+              {t('landingExt.footerBrand')}
             </span>
             <span className="az-footer-credit">
-              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>by Mindrose Team</a> · Apache-2.0 License
+              <a href="https://mindrose.xyz" target="_blank" rel="noreferrer" style={{ color: 'var(--az-ink-muted)', textDecoration: 'underline dotted', textUnderlineOffset: '3px' }}>{t('landingExt.footerCredit')}</a> · {t('landingExt.footerLicense')}
             </span>
             <span className="az-footer-copy">
-              Filed under: AI · Privacy · Read-only
+              {t('landingExt.footerFiled')}
             </span>
           </div>
         </div>

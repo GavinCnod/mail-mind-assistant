@@ -131,9 +131,10 @@ export default function AboutPage() {
       <nav className="az-nav">
         <Link href="/" className="az-nav-brand">MailMind</Link>
         <ul className="az-nav-links">
-          <li><Link href="/experience">Experience</Link></li>
-          <li><Link href="/privacy">Privacy</Link></li>
-          <li><a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer">GitHub</a></li>
+          <li><Link href="/experience">{t('nav.experience')}</Link></li>
+          <li><Link href="/about">{t('nav.about')}</Link></li>
+          <li><Link href="/privacy">{t('nav.privacy')}</Link></li>
+          <li><a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer">{t('nav.github')}</a></li>
         </ul>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
           <ThemeToggleStyled />

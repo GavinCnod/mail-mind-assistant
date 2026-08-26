@@ -25,6 +25,23 @@ export const en = {
     import: 'Import',
   },
 
+  // ---- Navigation ----
+  nav: {
+    experience: 'Experience',
+    about: 'About',
+    privacy: 'Privacy',
+    github: 'GitHub',
+    cta: 'Start Experience',
+    learnMore: 'Learn More',
+  },
+
+  nav: {
+    experience: 'Experience',
+    about: 'About',
+    privacy: 'Privacy',
+    github: 'GitHub',
+  },
+
   // ---- Landing Page ----
   landing: {
     title: 'MailMind',

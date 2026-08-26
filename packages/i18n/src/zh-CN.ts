@@ -25,6 +25,16 @@ export const zhCN = {
     import: '导入',
   },
 
+  // ---- Navigation ----
+  nav: {
+    experience: '体验',
+    about: '关于作者',
+    privacy: '隐私',
+    github: 'GitHub',
+    cta: '开始体验',
+    learnMore: '了解更多',
+  },
+
   // ---- Landing Page ----
   landing: {
     title: 'MailMind',

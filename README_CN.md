@@ -202,7 +202,7 @@ pnpm test:security
 | **赛道** | AI in Product |
 | **模型** | Agnes 2.5 Flash（通过 AgnesCode 调用） |
 | **构建时间** | AgnesCode Build Challenge 2026，8月20日–26日 |
-| **演示视频** | [YouTube 未公开链接 — 待补充] |
+| **演示视频** | [YouTube 未公开](https://youtu.be/bCos3H7ASMw) |
 | **诊断文件** | 所有会话的 AgnesCode 诊断文件均可提供 |
 
 本项目全程使用 **AgnesCode** 构建，底层模型为 **Agnes 2.5 Flash**。

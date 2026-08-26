@@ -256,7 +256,7 @@ Key security features:
 | **Track** | AI in Product |
 | **Model** | Agnes 2.5 Flash (via AgnesCode) |
 | **Build dates** | AgnesCode Build Challenge 2026, Aug 20–26 |
-| **Demo video** | [YouTube unlisted — to be provided] |
+| **Demo video** | [YouTube unlisted](https://youtu.be/bCos3H7ASMw) |
 | **Diagnostics** | AgnesCode diagnostic files available from all sessions |
 
 This project was built entirely with **AgnesCode**, using **Agnes 2.5 Flash** as the underlying model throughout every session.

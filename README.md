@@ -256,6 +256,7 @@ Key security features:
 | **Track** | AI in Product |
 | **Model** | Agnes 2.5 Flash (via AgnesCode) |
 | **Build dates** | AgnesCode Build Challenge 2026, Aug 20–26 |
+| **Live demo** | [mail-mind-assistant-web.vercel.app](https://mail-mind-assistant-web.vercel.app/) |
 | **Demo video** | [YouTube unlisted](https://youtu.be/bCos3H7ASMw) |
 | **Diagnostics** | AgnesCode diagnostic files available from all sessions |
 

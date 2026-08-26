@@ -31,28 +31,8 @@ export const en = {
     about: 'About',
     privacy: 'Privacy',
     github: 'GitHub',
-    cta: 'Start Experience',
-    learnMore: 'Learn More',
-  },
-
-  nav: {
-    experience: 'Experience',
-    about: 'About',
-    privacy: 'Privacy',
-    github: 'GitHub',
     sourceCode: 'Source Code',
   },
-
-  // ---- Experience Page ----
-  experience: {
-    eyebrow: 'Read-only AI · Inbox Triage',
-    headline: 'Connect.<br /><em>Analyze.</em><br />Understand',
-    mode: 'EXPERIENCE MODE · PLATE Nº 02',
-    step1: 'Initial authorization',
-    step2: 'Email connection configuration',
-    step3: 'AI analysis & summary',
-  },
-} as const;
 
   // ---- Landing Page ----
   landing: {
@@ -188,18 +168,6 @@ export const en = {
     UNKNOWN: 'An unknown error occurred. Please try again later.',
   },
 
-  // ---- Desktop App ----
-  desktop: {
-    title: 'MailMind Desktop',
-    syncEmails: 'Sync Emails',
-    syncing: 'Syncing...',
-    clearData: 'Clear Data',
-    emptyMessage: 'No emails yet. Click "Sync Emails" to get started.',
-    footer: 'All data stored locally, never uploaded',
-    footerDetail: 'SQLite • 5 days / 500 emails retention • Zero password persistence',
-    noSubject: '(No Subject)',
-  },
-
   // ---- Privacy ----
   privacy: {
     title: 'Privacy Policy',
@@ -240,6 +208,18 @@ export const en = {
     step1: 'Initial authorization',
     step2: 'Email connection configuration',
     step3: 'AI analysis & summary',
+  },
+
+  // ---- Desktop App ----
+  desktop: {
+    title: 'MailMind Desktop',
+    syncEmails: 'Sync Emails',
+    syncing: 'Syncing...',
+    clearData: 'Clear Data',
+    emptyMessage: 'No emails yet. Click "Sync Emails" to get started.',
+    footer: 'All data stored locally, never uploaded',
+    footerDetail: 'SQLite • 5 days / 500 emails retention • Zero password persistence',
+    noSubject: '(No Subject)',
   },
 } as const;
 

@@ -31,16 +31,6 @@ export const zhCN = {
     about: '关于作者',
     privacy: '隐私',
     github: 'GitHub',
-    cta: '开始体验',
-    learnMore: '了解更多',
-  },
-
-  // ---- Navigation ----
-  nav: {
-    experience: '体验',
-    about: '关于作者',
-    privacy: '隐私',
-    github: 'GitHub',
     sourceCode: '源代码',
   },
 
@@ -178,18 +168,6 @@ export const zhCN = {
     UNKNOWN: '发生未知错误。请稍后重试。',
   },
 
-  // ---- Desktop App ----
-  desktop: {
-    title: 'MailMind 桌面端',
-    syncEmails: '同步邮件',
-    syncing: '同步中...',
-    clearData: '清除数据',
-    emptyMessage: '暂无邮件。点击"同步邮件"开始使用。',
-    footer: '所有数据本地存储，永不上传',
-    footerDetail: 'SQLite • 5天/500封留存策略 • 零持久化密码',
-    noSubject: '(无主题)',
-  },
-
   // ---- Privacy ----
   privacy: {
     title: '隐私说明',
@@ -220,6 +198,28 @@ export const zhCN = {
       title: '关于 MindRose Studio',
       desc: '本项目由 Gavin Chen 及 MindRose 团队开发并开源呈现。MindRose 是专注于为中小制造企业、物流公司及跨国贸易商提供轻量级数字化解决方案的科技团队。我们不卖虚无的"数字化转型"概念，而是通过 AI 技术与全栈敏捷开发（Next.js、React 等），在几周内为你交付解决实际业务痛点的应用。',
     },
+  },
+
+  // ---- Experience Page ----
+  experience: {
+    eyebrow: '只读 AI · 收件箱分诊',
+    headline: '连接。<em>分析。</em>理解<span style="color: var(--az-accent)">。</span>',
+    modeLabel: '体验模式 · PLATE Nº 02',
+    step1: '初始授权',
+    step2: '邮箱连接配置',
+    step3: 'AI 分析与摘要',
+  },
+
+  // ---- Desktop App ----
+  desktop: {
+    title: 'MailMind 桌面端',
+    syncEmails: '同步邮件',
+    syncing: '同步中...',
+    clearData: '清除数据',
+    emptyMessage: '暂无邮件。点击"同步邮件"开始使用。',
+    footer: '所有数据本地存储，永不上传',
+    footerDetail: 'SQLite • 5天/500封留存策略 • 零持久化密码',
+    noSubject: '(无主题)',
   },
 } as const;
 

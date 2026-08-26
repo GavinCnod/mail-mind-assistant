@@ -6,6 +6,20 @@
 
 MailMind helps busy professionals quickly understand and prioritize their email without the risk of accidental sends, deletions, or modifications.
 
+## Problem & Purpose
+
+Email is the most vulnerable interface between users and AI agents. Every automated tool that touches your inbox risks sending unwanted messages, deleting important threads, or leaking sensitive data — because most systems are built with write access by default.
+
+MailMind flips this assumption. It is a **read-only** AI triage assistant that never sends, deletes, moves, or marks mail. It reads, summarizes, categorizes, and recommends — then stops.
+
+This project was built for the **AgnesCode Build Challenge** to demonstrate what trustworthy AI agent design looks like when privacy and safety are architectural constraints, not afterthoughts.
+
+### Why now?
+
+- Professionals receive hundreds of emails weekly; automated triage saves hours
+- Growing distrust of AI tools that have broad file/mail access
+- Email remains the primary professional communication channel, yet few tools treat its data with read-only discipline
+
 ## Architecture Overview
 
 ```
@@ -236,11 +250,23 @@ Key security features:
 
 ## Hackathon Submission
 
-This project was built for the **[AgnesCode Build Challenge](https://discord.gg/agnes)** — a solo, online hackathon using AgnesCode, Agnes AI's agentic coding tool.
+| Field | Value |
+|-------|-------|
+| **Project** | MailMind v0.3.1 |
+| **Track** | AI in Product |
+| **Model** | Agnes 2.5 Flash (via AgnesCode) |
+| **Build dates** | AgnesCode Build Challenge 2026, Aug 20–26 |
+| **Demo video** | [YouTube unlisted — to be provided] |
+| **Diagnostics** | AgnesCode diagnostic files available from all sessions |
 
-- **Project:** MailMind v0.3.1 (Hackathon Build)
-- **Dates:** Aug 20–26, 2026
-- **Category:** Productivity / Privacy Tool
+This project was built entirely with **AgnesCode**, using **Agnes 2.5 Flash** as the underlying model throughout every session.
+
+### How AgnesCode was used
+
+- **Architecture design:** iterative refinement of the read-only safety contract, shared packages structure, and threat model
+- **Code generation:** full implementation of IMAP email sync, BFF API routes, Zod schemas, React UI components, and Tauri Rust backend
+- **Security audit:** `verify-no-write-mail-commands.mjs` script and AGENTS.md security contract were generated and refined through AgnesCode sessions
+- **Documentation:** README, SECURITY.md, PRD documents created and maintained via AgnesCode multi-session workflow
 
 ## Contributing
 
@@ -258,4 +284,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Disclaimer:** MailMind uses app-specific passwords exclusively and never stores credentials on disk. All email data is processed locally or in memory only. While we take security seriously, this application has not undergone a professional security audit. Use at your own discretion.
+**Disclaimer:** MailMind uses app-specific passwords exclusively and never stores credentials on disk. All email data is processed locally or in memory only. The project is designed to be fully read-only at the protocol level; known limitations include an incomplete desktop binary build (source code is complete and functional — packaging is pending final verification). Always use app-specific passwords over main credentials.

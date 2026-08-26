@@ -167,16 +167,12 @@ export default function ExperiencePage() {
         <div className="az-container">
           <div className="az-hero-inner">
             <div>
-              <div className="az-eyebrow" ref={addReveal()}>Read-only AI · Inbox Triage</div>
-              <h1 className="az-headline" ref={addReveal()}>
-                Connect.<br /><em>Analyze.</em><br />
-                Understand<span style={{ color: 'var(--az-accent)' }}>.</span>
-              </h1>
+              <div className="az-eyebrow" ref={addReveal()} dangerouslySetInnerHTML={{ __html: t('experience.headline') }} />
               <div className="az-body" ref={addReveal()}>
                 <p>{t('landing.tagline')}</p>
               </div>
               <div style={{ marginTop: '32px', fontFamily: 'var(--az-font-mono)', fontSize: '11px', color: 'var(--az-ink-faint)', letterSpacing: '0.04em' }} ref={addReveal()}>
-                EXPERIENCE MODE · PLATE Nº 02
+                {t('experience.modeLabel')}
               </div>
             </div>
           </div>
@@ -191,7 +187,7 @@ export default function ExperiencePage() {
             <div className="reveal" ref={addReveal()} style={{ maxWidth: '560px', margin: '0 auto' }}>
               <div className="sec-rule" ref={addReveal()}>
                 <span className="roman">I.</span>
-                <span className="sec-meta">Initial authorization</span>
+                <span className="sec-meta">{t('experience.step1')}</span>
                 <span className="page-count">001 / 003</span>
               </div>
               <div style={{
@@ -286,7 +282,7 @@ export default function ExperiencePage() {
             <div style={{ maxWidth: '800px', margin: '0 auto' }}>
               <div className="sec-rule reveal" ref={addReveal()}>
                 <span className="roman">II.</span>
-                <span className="sec-meta">Email connection configuration</span>
+                <span className="sec-meta">{t('experience.step2')}</span>
                 <span className="page-count">002 / 003</span>
               </div>
 
@@ -404,7 +400,7 @@ export default function ExperiencePage() {
                 <>
                   <div className="sec-rule reveal" ref={addReveal()}>
                     <span className="roman">III.</span>
-                    <span className="sec-meta">AI analysis & summary</span>
+                    <span className="sec-meta">{t('experience.step3')}</span>
                     <span className="page-count">003 / 003</span>
                   </div>
 

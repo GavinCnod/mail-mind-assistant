@@ -43,6 +43,17 @@ export const en = {
     sourceCode: 'Source Code',
   },
 
+  // ---- Experience Page ----
+  experience: {
+    eyebrow: 'Read-only AI · Inbox Triage',
+    headline: 'Connect.<br /><em>Analyze.</em><br />Understand',
+    mode: 'EXPERIENCE MODE · PLATE Nº 02',
+    step1: 'Initial authorization',
+    step2: 'Email connection configuration',
+    step3: 'AI analysis & summary',
+  },
+} as const;
+
   // ---- Landing Page ----
   landing: {
     title: 'MailMind',
@@ -219,6 +230,16 @@ export const en = {
       title: 'About MindRose Studio',
       desc: 'This project is open-sourced by Gavin Chen and the MindRose team. MindRose is a tech team focused on delivering lightweight digital solutions for small and medium manufacturers, logistics companies, and cross-border traders. We use AI and full-stack agile development (Next.js, React, etc.) to deliver applications that solve real business pain points within weeks.',
     },
+  },
+
+  // ---- Experience Page ----
+  experience: {
+    eyebrow: 'Read-only AI · Inbox Triage',
+    headline: 'Connect.<br /><em>Analyze.</em><br />Understand<span style="color: var(--az-accent)">.</span>',
+    modeLabel: 'EXPERIENCE MODE · PLATE Nº 02',
+    step1: 'Initial authorization',
+    step2: 'Email connection configuration',
+    step3: 'AI analysis & summary',
   },
 } as const;
 

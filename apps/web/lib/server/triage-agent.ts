@@ -107,7 +107,7 @@ export class MailTriageAgent {
       const startIdx = Math.max(1, stats.messageCount - messageCount + 1);
       for (let i = startIdx; i <= stats.messageCount; i++) {
         try {
-          this.progressCallback?.('parsing', `正在解析第 ${i}/${messageCount} 封...`);
+          this.progressCallback?.('parsing', `正在解析${i}/${messageCount}封...`);
           const rawBuffer = await this.pop3Client!.fetchMessage(i.toString());
           const tempHeader: EmailHeader = {
             id: i.toString(),
@@ -125,22 +125,27 @@ export class MailTriageAgent {
         }
       }
     } else {
-      const targetMailbox = this.mailbox;
+      let targetMailbox = this.mailbox;
       try {
         const boxes = await this.imapClient!.listMailboxes();
+        console.log('[TriageAgent] Available mailboxes:', boxes);
         if (!boxes.includes(targetMailbox)) {
           const inboxBox = boxes.find(b => b.toLowerCase() === 'inbox') ?? boxes[0] ?? 'INBOX';
+          console.log('[TriageAgent] Target mailbox not found, switching to:', inboxBox);
+          targetMailbox = inboxBox;
         }
-      } catch {
-        // Use configured mailbox as fallback
+      } catch (err) {
+        console.warn('[TriageAgent] Failed to list mailboxes, using default:', err);
       }
 
+      console.log('[TriageAgent] Searching mailbox:', targetMailbox);
       const headers: EmailHeader[] = await this.imapClient!.searchEmails(targetMailbox, this.maxEmails);
+      console.log('[TriageAgent] Found', headers.length, 'email headers');
 
       this.progressCallback?.('parsing', '正在解析邮件内容...');
       for (let i = 0; i < headers.length; i++) {
         const header = headers[i];
-        this.progressCallback?.('parsing', `正在解析第 ${i + 1}/${headers.length} 封...`);
+        this.progressCallback?.('parsing', `正在解析${i + 1}/${headers.length}封...`);
         try {
           const rawBuffer = await this.imapClient!.fetchRawMessage(targetMailbox, header.uid);
           const parsed = await parseEmailBuffer(rawBuffer, header);

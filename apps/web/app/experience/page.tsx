@@ -85,6 +85,7 @@ export default function ExperiencePage() {
     setConnecting(true);
     setError('');
     try {
+      console.log('[Experience] Sending connection test with:', { protocol, host, port, encryption, username });
       // Call the actual connection test API
       const res = await fetch('/api/connection/test', {
         method: 'POST',
@@ -98,6 +99,7 @@ export default function ExperiencePage() {
           password,
         }),
       });
+      console.log('[Experience] Connection test response:', await res.clone().json());
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || data.error || 'Connection failed');
       setConnected(true);
@@ -225,6 +227,11 @@ export default function ExperiencePage() {
       }
       
       console.log('[Analyze] Total emails collected:', collectedEmails.length, 'insights:', collectedInsights.length);
+      
+      // 如果没有收集到任何邮件或洞察，显示明确提示
+      if (collectedEmails.length === 0 && collectedInsights.length === 0) {
+        setError('未找到可分析的邮件。请检查：1) 邮箱中是否有邮件 2) 邮件是否被标记为已删除');
+      }
       
       // Fallback: if we got emails but no insights, use emails as insights
       if (collectedEmails.length > 0 && collectedInsights.length === 0) {

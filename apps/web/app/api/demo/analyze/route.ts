@@ -1,5 +1,5 @@
 /**
- * POST /api/demo/analyze — Real IMAP + LLM analysis with SSE streaming
+ * POST /api/demo/analyze - Real IMAP + LLM analysis with SSE streaming
  */
 import { NextResponse } from 'next/server';
 import { MailTriageAgent, type TriageOptions } from '../../../../lib/server/triage-agent';
@@ -190,10 +190,24 @@ async function realModeStream(
         controller.enqueue(encoder.encode(encodeSSE({ type: 'progress', stage: stage as any, message })));
       };
 
+      let shouldClose = true;
       try {
         const results = await agent.runWithProgress(progressCallback);
 
         const emails = results.emails || [];
+        console.log('[API] Email count from IMAP:', emails.length);
+        
+        // If no emails found, send error event and exit early
+        if (emails.length === 0) {
+          controller.enqueue(encoder.encode(encodeSSE({ 
+            type: 'error', 
+            code: 'NO_EMAILS' as any,
+            safeMessage: locale === 'zh-CN' ? '邮箱中没有找到邮件，请检查邮箱是否有未删除的邮件' : 'No emails found in mailbox. Please check if there are any non-deleted emails.'
+          })));
+          shouldClose = false;
+          return;
+        }
+        
         for (let i = 0; i < emails.length; i++) {
           const email = emails[i];
           const insight = (results.insights as Record<string, unknown>[])?.[i] ?? {};
@@ -238,6 +252,7 @@ async function realModeStream(
         controller.enqueue(encoder.encode(encodeSSE({ type: 'completed', insights: results.insights as any })));
 
       } catch (error) {
+        console.error('[API] Analysis error:', error);
         const errorCode = error instanceof Error ? error.message : 'UNKNOWN_ERROR';
         controller.enqueue(encoder.encode(encodeSSE({
           type: 'error',
@@ -246,7 +261,9 @@ async function realModeStream(
           safeMessage: getSafeErrorMessage(errorCode, locale),
         })));
       } finally {
-        controller.close();
+        if (shouldClose) {
+          controller.close();
+        }
       }
     },
   });
@@ -264,6 +281,7 @@ function getSafeErrorMessage(code: string, locale: string): string {
   const messages: Record<string, Record<string, string>> = {
     AUTH_FAILED: { 'zh-CN': '身份验证失败，请检查用户名或应用密码', en: 'Authentication failed, check your username or app password' },
     TLS_FAILED: { 'zh-CN': 'TLS 连接失败，请检查加密设置', en: 'TLS connection failed, check encryption settings' },
+    NO_EMAILS: { 'zh-CN': '邮箱中没有找到邮件，请检查邮箱是否有未删除的邮件', en: 'No emails found in mailbox' },
     UNKNOWN_ERROR: { 'zh-CN': '发生未知错误，请稍后重试', en: 'An unknown error occurred, please try again' },
   };
   const key = code || 'UNKNOWN_ERROR';

@@ -32,8 +32,12 @@ export class ImapClient {
     config: ConnectionConfig,
     password: string,
   ) {
-    // ImapFlow constructor signature varies; use type assertion
-    this.conn = new (ImapFlow as any)(config.host, {
+    console.log('[ImapClient] Constructor called with:', JSON.stringify(config));
+    
+    // ImapFlow v1.x expects a single options object
+    // See: https://github.com/postalsys/imapflow#quick-example
+    const options = {
+      host: config.host,
       port: config.port,
       secure: config.encryption === 'ssl',
       auth: {
@@ -44,11 +48,22 @@ export class ImapClient {
         rejectUnauthorized: true,
       },
       socketTimeout: 30000,
-    });
+    };
+    
+    console.log('[ImapClient] Creating ImapFlow with options:', JSON.stringify(options));
+    this.conn = new ImapFlow(options);
+    console.log('[ImapClient] ImapFlow instance created');
   }
 
   async connect(): Promise<void> {
-    await (this.conn as any).connect();
+    console.log('[ImapClient] Calling connect()...');
+    try {
+      await this.conn.connect();
+      console.log('[ImapClient] Connect successful');
+    } catch (err) {
+      console.error('[ImapClient] Connect failed:', err);
+      throw err;
+    }
   }
 
   async disconnect(): Promise<void> {
@@ -85,9 +100,16 @@ export class ImapClient {
     try {
       await (this.conn as any).openBox?.(mailbox, true); // readOnly
 
-      const uids = await (this.conn as any).search?.({
-        not: ['DELETED'],
-      }) as number[] ?? [];
+      // First try empty search to get all emails
+      let uids = await (this.conn as any).search?.({}) as number[] ?? [];
+      
+      // If empty, try without filters
+      if (uids.length === 0) {
+        console.log('[ImapClient] No emails found with empty search, trying ALL...');
+        uids = await (this.conn as any).search?.('ALL') as number[] ?? [];
+      }
+      
+      console.log('[ImapClient] Found', uids.length, 'emails in', mailbox);
 
       // Sort descending by UID (newest first), limit
       uids.sort((a: number, b: number) => b - a);

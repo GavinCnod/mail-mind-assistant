@@ -194,6 +194,7 @@ export const errorCodeSchema = z.enum([
   'EMAIL_PARSE_FAILED',
   'SCHEMA_VALIDATION_FAILED',
   'SESSION_DISPOSED',
+  'NO_EMAILS',
 ]);
 
 export const streamEventSchema = z.discriminatedUnion('type', [

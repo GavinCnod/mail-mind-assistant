@@ -201,7 +201,8 @@ async function realModeStream(
         if (emails.length === 0) {
           controller.enqueue(encoder.encode(encodeSSE({ 
             type: 'error', 
-            code: 'NO_EMAILS' as any,
+            code: 'LIMIT_REACHED',
+            retryable: true,
             safeMessage: locale === 'zh-CN' ? '邮箱中没有找到邮件，请检查邮箱是否有未删除的邮件' : 'No emails found in mailbox. Please check if there are any non-deleted emails.'
           })));
           shouldClose = false;

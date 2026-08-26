@@ -221,7 +221,7 @@ export default function LandingPage() {
             </div>
 
             {/* Right: Collage image */}
-            <div className="az-hero-visual" ref={addReveal()} style={{ backgroundImage: \`url('/images/bg-01.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}><img src="/images/bg-01.png" alt="Landing" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /><CollageHero />
+            <div className="az-hero-visual" ref={addReveal()} style={{ backgroundImage: `url('.public/images/bg-01.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}><img src="/images/bg-01.png" alt="Landing" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /><CollageHero />
               {/* Corner brackets */}
               <div style={{ position: 'absolute', top: 12, left: 12, width: 22, height: 22, borderTop: '1px solid rgba(0,0,0,0.2)', borderLeft: '1px solid rgba(0,0,0,0.2)' }} />
               <div style={{ position: 'absolute', top: 12, right: 12, width: 22, height: 22, borderTop: '1px solid rgba(0,0,0,0.2)', borderRight: '1px solid rgba(0,0,0,0.2)' }} />

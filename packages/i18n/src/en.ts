@@ -40,6 +40,7 @@ export const en = {
     about: 'About',
     privacy: 'Privacy',
     github: 'GitHub',
+    sourceCode: 'Source Code',
   },
 
   // ---- Landing Page ----

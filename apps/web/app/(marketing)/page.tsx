@@ -215,7 +215,7 @@ export default function LandingPage() {
                   <span className="arrow">↗</span>
                 </Link>
                 <a href="https://github.com/GavinCnod/mail-mind-assistant" target="_blank" rel="noreferrer" className="az-btn-ghost">
-                  View on GitHub
+                  {t('nav.github')}
                 </a>
               </div>
               {/* Coordinates */}

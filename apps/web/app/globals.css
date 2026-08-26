@@ -486,6 +486,27 @@ body::before {
   overflow: hidden;
   border: 1px solid var(--az-rule);
 }
+
+
+/* Hero background images */
+.hero-bg-landing .az-hero-inner {
+  background: linear-gradient(rgba(242, 240, 235, 0.88), rgba(242, 240, 235, 0.92)), url('/images/bg-01.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-bg-about .az-hero-inner {
+  background: linear-gradient(rgba(242, 240, 235, 0.88), rgba(242, 240, 235, 0.92)), url('/images/bg-02.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-bg-privacy .az-hero-inner {
+  background: linear-gradient(rgba(242, 240, 235, 0.88), rgba(242, 240, 235, 0.92)), url('/images/bg-03.png');
+  background-size: cover;
+  background-position: center;
+}
+
 .az-hero-visual img,
 .az-hero-visual .placeholder-img {
   width: 100%;

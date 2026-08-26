@@ -143,7 +143,7 @@ export default function PrivacyPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <header className="az-hero" style={{ paddingBottom: 'var(--az-section-y)' }}>
+      <header className="az-hero hero-bg-privacy" style={{ paddingBottom: 'var(--az-section-y)' }}>
         <div className="az-container">
           <div className="az-hero-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <div style={{ maxWidth: '800px' }}>

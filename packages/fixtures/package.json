@@ -1,11 +1,13 @@
 {
   "name": "@mailmind/fixtures",
   "version": "0.3.2",
-  "type": "module",
-  "exports": {
-    "./*.eml": "./src/*.eml"
+  "description": "Test email fixtures for MailMind",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No tests configured\" && exit 0"
   },
   "devDependencies": {
-    "typescript": "^5.7.0"
+    "typescript": "^5.3.0"
   }
 }

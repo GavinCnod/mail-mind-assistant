@@ -3,6 +3,11 @@
  * Blocks loopback, private networks, link-local, and metadata IPs
  */
 
+import { resolve as dnsResolve } from 'dns';
+import { promisify } from 'util';
+
+const dnsResolveAsync = promisify(dnsResolve);
+
 // Simple private IP detection without external dependency
 const PRIVATE_IP_PATTERNS = [
   /^127\./,           // Loopback
@@ -15,28 +20,45 @@ const PRIVATE_IP_PATTERNS = [
   /^fe80:/i,          // IPv6 link-local
   /^fc00:/i,          // IPv6 unique local
   /^fd00:/i,          // IPv6 unique local
+  /^100\.64\./,       // Carrier-grade NAT
 ];
 
-export function isSafeHost(host: string): boolean {
-  const cleanHost = host.replace(/^\[|\]$/g, '');
-
-  // Check if it's an IP address
-  if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(cleanHost)) {
-    return !PRIVATE_IP_PATTERNS.some(pattern => pattern.test(cleanHost));
-  }
-
-  // For hostnames, we can't easily determine if they resolve to private IPs
-  // without DNS lookup, so we allow them but log a warning
-  console.warn(`Host ${host} resolved to IP - SSRF protection requires DNS resolution`);
-  return true;
+/**
+ * Check if an IP address is safe (not private/local)
+ */
+export function isSafeIP(ip: string): boolean {
+  return !PRIVATE_IP_PATTERNS.some(pattern => pattern.test(ip));
 }
 
 /**
- * Resolve hostname to IP and check if safe
- * Note: In production, this should use proper DNS resolution
+ * Check if a host is safe by resolving DNS and checking the IP
  */
-export async function isSafeHostname(hostname: string): Promise<boolean> {
-  // For now, use a simple check
-  // In production, implement proper DNS resolution + IP check
-  return isSafeHost(hostname);
+export async function isSafeHost(host: string): Promise<boolean> {
+  const cleanHost = host.replace(/^\[|\]$/g, '');
+
+  // Check if it's an IP address directly
+  if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(cleanHost)) {
+    return isSafeIP(cleanHost);
+  }
+
+  // For hostnames, resolve and check
+  try {
+    const ips = await dnsResolveAsync(cleanHost, 'ipv4');
+    // If any resolved IP is private, consider it unsafe
+    return !ips.some((ip: string) => !isSafeIP(ip));
+  } catch {
+    // DNS resolution failed, assume unsafe
+    return false;
+  }
+}
+
+/**
+ * Validate host before connection
+ * Throws if host is not safe
+ */
+export async function validateHost(host: string): Promise<void> {
+  const safe = await isSafeHost(host);
+  if (!safe) {
+    throw new Error(`SECURITY: Host '${host}' resolved to a private/local IP address`);
+  }
 }

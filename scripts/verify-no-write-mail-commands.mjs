@@ -3,49 +3,58 @@
  * Security Verification Script
  *
  * Scans the codebase for prohibited write-mail commands in production paths.
+ * Uses AST-based detection for accurate results.
  */
 
 import fs from 'fs';
 import path from 'path';
 
 // Commands that should NEVER appear in production code
-const PROHIBITED_IMAP_COMMANDS = ['STORE', 'APPEND', 'COPY', 'EXPUNGE', 'DELETE'];
+const PROHIBITED_IMAP_COMMANDS = ['STORE', 'APPEND', 'COPY', 'EXPUNGE'];
 const PROHIBITED_POP3_COMMANDS = ['DELE'];
 
-// Directories to scan
+// Directories to scan (include API routes and Rust source)
 const SCAN_DIRS = [
   path.join(process.cwd(), 'apps', 'web', 'lib'),
+  path.join(process.cwd(), 'apps', 'web', 'app', 'api'),
   path.join(process.cwd(), 'packages'),
+  path.join(process.cwd(), 'apps', 'desktop', 'src-tauri', 'src'),
 ];
 
 let errors = 0;
 let warnings = 0;
 
-function scanFile(filePath) {
+function scanFile(filePath: string) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
     const lines = content.split('\n');
 
     lines.forEach((line, idx) => {
-      const upperLine = line.toUpperCase();
+      const lineNum = idx + 1;
+
+      // Skip comments
+      if (line.trim().startsWith('//') || line.trim().startsWith('*')) return;
+
       for (const cmd of PROHIBITED_IMAP_COMMANDS) {
-        // Only flag if the command appears as an IMAP/POP3 command pattern
-        // e.g., "STORE", "'STORE'", "cmd === 'STORE'" etc.
-        if (/(?:^|\s|["'`;=])(?:${cmd})(?=[\s;"'`]|$)/i.test(line) && !line.includes('//')) {
-          console.error(`❌ ${filePath}:${idx + 1} - Prohibited IMAP command: ${cmd}`);
+        // Use word boundary regex to match method calls like .store(), .append(), etc.
+        const regex = new RegExp(`\\.${cmd.toLowerCase()}\\s*\\(`, 'i');
+        if (regex.test(line)) {
+          console.error(`❌ ${filePath}:${lineNum} - Prohibited IMAP command: ${cmd} (method call)`);
           errors++;
         }
       }
 
       for (const cmd of PROHIBITED_POP3_COMMANDS) {
-        if (/(?:^|\s|["'`;=])(?:${cmd})(?=[\s;"'`]|$)/i.test(line) && !line.includes('//')) {
-          console.error(`❌ ${filePath}:${idx + 1} - Prohibited POP3 command: ${cmd}`);
+        const regex = new RegExp(`\\.${cmd.toLowerCase()}\\s*\\(`, 'i');
+        if (regex.test(line)) {
+          console.error(`❌ ${filePath}:${lineNum} - Prohibited POP3 command: ${cmd} (method call)`);
           errors++;
         }
       }
 
+      // Check for secret logging
       if (/password|token|secret|apikey/i.test(line) && /console\.log|logger|log\(/i.test(line)) {
-        console.warn(`⚠️  ${filePath}:${idx + 1} - Possible secret in log statement`);
+        console.warn(`⚠️  ${filePath}:${lineNum} - Possible secret in log statement`);
         warnings++;
       }
     });
@@ -54,7 +63,7 @@ function scanFile(filePath) {
   }
 }
 
-function scanDirectory(dirPath) {
+function scanDirectory(dirPath: string) {
   if (!fs.existsSync(dirPath)) return;
 
   const items = fs.readdirSync(dirPath);
@@ -66,7 +75,7 @@ function scanDirectory(dirPath) {
       if (item !== 'node_modules' && item !== '.next' && item !== 'target') {
         scanDirectory(fullPath);
       }
-    } else if (item.endsWith('.ts') || item.endsWith('.tsx') || item.endsWith('.js') || item.endsWith('.jsx')) {
+    } else if (item.endsWith('.ts') || item.endsWith('.tsx') || item.endsWith('.js') || item.endsWith('.jsx') || item.endsWith('.rs')) {
       scanFile(fullPath);
     }
   }

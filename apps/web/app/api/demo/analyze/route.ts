@@ -5,33 +5,48 @@ import { NextResponse } from 'next/server';
 import { MailTriageAgent, type TriageOptions } from '../../../../lib/server/triage-agent';
 import { FIXTURE_INSIGHTS, FIXTURE_EMAILS } from '../../../../lib/server/fixtures';
 import { sanitizeContent } from '../../../../lib/server/sanitize-html';
+import { validateHost } from '../../../../lib/server/ip-guard';
+import { analyzeRequestSchema } from '@mailmind/contracts';
 import type { StreamEvent, EmailCardViewModel, SanitizedEmailDetail, ConnectionConfig } from '@mailmind/contracts';
 
 const encoder = new TextEncoder();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 10; // max requests per window
+const requestCounts = new Map<string, { count: number; resetAt: number }>();
 
 function encodeSSE(event: StreamEvent): string {
   return `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`;
 }
 
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = requestCounts.get(ip);
+
+  if (!record || now > record.resetAt) {
+    requestCounts.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+
+  if (record.count >= RATE_LIMIT_MAX) {
+    return false;
+  }
+
+  record.count++;
+  return true;
+}
+
 export async function POST(request: Request) {
-  console.log('[API] POST /api/demo/analyze received at', new Date().toISOString());
-  
   try {
     const body = await request.json();
 
-    console.log('[API] ========================================');
-    console.log('[API] Full request body keys:', Object.keys(body));
-    console.log('[API] Has password:', !!body.password);
-    console.log('[API] Connection details:', { host: body.connection?.host, port: body.connection?.port, protocol: body.connection?.protocol });
-    console.log('[API] ========================================');
-    console.log('[API] Connection details:', {
-      host: body.connection?.host,
-      port: body.connection?.port,
-      username: body.connection?.username,
-      encryption: body.connection?.encryption,
-      protocol: body.connection?.protocol,
-    });
-    console.log('[API] ========================================');
+    // Validate request body against schema
+    const validationResult = analyzeRequestSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: 'INVALID_REQUEST', message: 'Request validation failed', details: validationResult.error.flatten().fieldErrors },
+        { status: 400 },
+      );
+    }
 
     // Validate consent
     if (!body.consent?.userAgreement || !body.consent?.privacyPolicy || !body.consent?.mailProcessingAuth) {
@@ -50,11 +65,26 @@ export async function POST(request: Request) {
       body.connection?.username
     );
 
-    console.log('[API] hasCredentials:', hasCredentials, 'host present:', !!body.connection?.host, 'username present:', !!body.connection?.username);
-
     if (!hasCredentials) {
-      console.log('[API] Falling back to demo mode - missing credentials');
       return demoModeStream(locale, maxEmails);
+    }
+
+    // Validate host for SSRF protection
+    const safe = await validateHost(body.connection.host);
+    if (!safe) {
+      return NextResponse.json(
+        { error: 'SECURITY', message: 'Host validation failed - private IP addresses are not allowed' },
+        { status: 403 },
+      );
+    }
+
+    // Rate limiting
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (!checkRateLimit(clientIp)) {
+      return NextResponse.json(
+        { error: 'RATE_LIMITED', message: 'Too many requests, please try again later' },
+        { status: 429 },
+      );
     }
 
     // Use server-side LLM config (don't trust client-provided API key)
@@ -63,16 +93,7 @@ export async function POST(request: Request) {
       apiKey: process.env.DEMO_LLM_API_KEY || '',
       model: process.env.DEMO_LLM_MODEL || 'agnes-2.0-flash',
     };
-    
-    // DEBUG: Log if API key is empty or invalid
-    if (!serverLlm.apiKey) {
-      console.error('[API] WARNING: DEMO_LLM_API_KEY is not set!');
-    } else if (serverLlm.apiKey.length < 20) {
-      console.warn('[API] WARNING: DEMO_LLM_API_KEY looks too short:', serverLlm.apiKey.length);
-    } else {
-      console.log('[API] Using server LLM config:', { baseUrl: serverLlm.baseUrl, hasApiKey: !!serverLlm.apiKey, model: serverLlm.model });
-    }
-    
+
     return realModeStream(body.connection, body.password || '', serverLlm, locale, maxEmails);
 
   } catch (error) {
@@ -97,7 +118,7 @@ async function demoModeStream(locale: string, maxEmails: number) {
       await sleep(300);
 
       for (let i = 0; i < FIXTURE_EMAILS.length && i < maxEmails; i++) {
-        sendProgress('parsing', `${locale === 'zh-CN' ? '解析' : 'Parsing'} ${i + 1}/${FIXTURE_EMAILS.length}...`);
+        sendProgress('parsing', `${locale === 'zh-CN' ? '解析' : 'Parsing'} ${i + 1}/${FIXTURE_EMAILS.length}...`;
         await sleep(200);
 
         const insight = FIXTURE_INSIGHTS[i];
@@ -162,13 +183,6 @@ async function realModeStream(
   locale: string,
   maxEmails: number,
 ) {
-  console.log('[API] Creating agent with:', { 
-    protocol: connection.protocol, 
-    host: connection.host, 
-    port: connection.port, 
-    encryption: connection.encryption 
-  });
-  
   if (!connection.host || !connection.port || !connection.username) {
     throw new Error('MISSING_CREDENTIALS');
   }
@@ -195,20 +209,19 @@ async function realModeStream(
         const results = await agent.runWithProgress(progressCallback);
 
         const emails = results.emails || [];
-        console.log('[API] Email count from IMAP:', emails.length);
-        
+
         // If no emails found, send error event and exit early
         if (emails.length === 0) {
-          controller.enqueue(encoder.encode(encodeSSE({ 
-            type: 'error', 
-            code: 'LIMIT_REACHED',
+          controller.enqueue(encoder.encode(encodeSSE({
+            type: 'error',
+            code: 'NO_EMAILS',
             retryable: true,
             safeMessage: locale === 'zh-CN' ? '邮箱中没有找到邮件，请检查邮箱是否有未删除的邮件' : 'No emails found in mailbox. Please check if there are any non-deleted emails.'
           })));
           shouldClose = false;
           return;
         }
-        
+
         for (let i = 0; i < emails.length; i++) {
           const email = emails[i];
           const insight = (results.insights as Record<string, unknown>[])?.[i] ?? {};
@@ -283,6 +296,8 @@ function getSafeErrorMessage(code: string, locale: string): string {
     AUTH_FAILED: { 'zh-CN': '身份验证失败，请检查用户名或应用密码', en: 'Authentication failed, check your username or app password' },
     TLS_FAILED: { 'zh-CN': 'TLS 连接失败，请检查加密设置', en: 'TLS connection failed, check encryption settings' },
     NO_EMAILS: { 'zh-CN': '邮箱中没有找到邮件，请检查邮箱是否有未删除的邮件', en: 'No emails found in mailbox' },
+    SECURITY: { 'zh-CN': '安全检查失败，不允许访问私有地址', en: 'Security check failed - private addresses not allowed' },
+    RATE_LIMITED: { 'zh-CN': '请求过于频繁，请稍后重试', en: 'Too many requests, please try again later' },
     UNKNOWN_ERROR: { 'zh-CN': '发生未知错误，请稍后重试', en: 'An unknown error occurred, please try again' },
   };
   const key = code || 'UNKNOWN_ERROR';

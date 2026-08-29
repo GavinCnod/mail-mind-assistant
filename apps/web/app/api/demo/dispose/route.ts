@@ -5,19 +5,54 @@
  */
 import { NextResponse } from 'next/server';
 
+// In-memory session store (would be replaced with proper storage in production)
+const activeSessions = new Map<string, {
+  imapClient: any;
+  pop3Client: any;
+  createdAt: number;
+}>();
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const sessionId = body.sessionId;
-    
-    // In a real implementation, we would:
-    // 1. Close any open IMAP connections
-    // 2. Clear in-memory caches
-    // 3. Cancel any pending promises
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Session disposed successfully' 
+
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: 'MISSING_SESSION_ID' },
+        { status: 400 }
+      );
+    }
+
+    // Clean up session
+    const session = activeSessions.get(sessionId);
+    if (session) {
+      // Close IMAP connection if exists
+      if (session.imapClient) {
+        try {
+          await session.imapClient.disconnect();
+        } catch {
+          // Ignore cleanup errors
+        }
+      }
+
+      // Close POP3 connection if exists
+      if (session.pop3Client) {
+        try {
+          await session.pop3Client.disconnect();
+        } catch {
+          // Ignore cleanup errors
+        }
+      }
+
+      // Remove from store
+      activeSessions.delete(sessionId);
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Session disposed successfully',
+      disposed: !!session,
     });
   } catch (error) {
     console.error('Dispose API error:', error);

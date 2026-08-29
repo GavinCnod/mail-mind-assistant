@@ -1,11 +1,11 @@
 # Build artifacts
-*.js
-*.d.ts
+dist/
+build/
 *.js.map
 *.d.ts.map
--dist/
-build/
-.node_modules/
+
+# Node modules (keep in workspace root)
+node_modules/
 
 # IDE
 .vscode/
@@ -15,7 +15,7 @@ build/
 .DS_Store
 Thumbs.db
 
-# Env
+# Env files
 .env.local
 .env.production
 .env.*.local
@@ -25,7 +25,6 @@ Thumbs.db
 *.pem
 *.p12
 *.keystore
-.env
 
 # Logs
 *.log
@@ -47,19 +46,40 @@ coverage/
 
 # Rust
 **/*.rs.bk
-Cargo.lock
+apps/desktop/src-tauri/target/
 
-# Tauri
+# Tauri generated
 apps/desktop/src-tauri/gen/
 apps/desktop/src-tauri/icons/
 apps/desktop/src-tauri/capabilities/
 apps/desktop/src-tauri/tauri.conf.json.bak
-
-# Node.js
-node_modules/
 
 # Next.js
 apps/web/.next/
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Diagnostic files (AI tool output)
+diagnostics/
+agnis-diagnostics-*.zip
+
+# Temporary files
+$null
+upload_*.jpg
+icon.ico
+
+# Session documents
+AGENTS.md
+MEMORY.md
+FIX_ANALYSIS.md
+IMPLEMENTATION_PLAN.md
+
+# Ad-hoc scripts
+cleanup.py
+read_docs.py
+version.py
+create_dirs.js
+start-server.ps1
+run-server.ps1
+watch-logs.ps1

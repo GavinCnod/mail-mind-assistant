@@ -52,11 +52,9 @@ export async function POST(request: Request) {
       const validated = digestReportSchema.parse(parsed);
       return NextResponse.json(validated);
     } catch (llmError) {
-      console.error('[Digest API] LLM failed, using mock:', llmError);
       return NextResponse.json(generateMockDigest(body, locale));
     }
   } catch (error) {
-    console.error('Digest API error:', error);
     return NextResponse.json(
       { error: 'INTERNAL_ERROR' },
       { status: 500 }

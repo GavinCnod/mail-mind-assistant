@@ -125,7 +125,6 @@ export async function POST(request: Request) {
     });
 
   } catch (error) {
-    console.error('[MailMind] Connection test error:', error);
     return NextResponse.json(
       { error: 'INTERNAL_ERROR', message: 'An unexpected error occurred' },
       { status: 500 }

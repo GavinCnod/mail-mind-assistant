@@ -121,26 +121,22 @@ export class MailTriageAgent {
           const parsed = await parseEmailBuffer(rawBuffer, tempHeader);
           parsedEmails.push(parsed);
         } catch (err) {
-          console.error(`[MailMind] Failed to fetch email ${i}:`, err);
+          // Skip failed email fetch
         }
       }
     } else {
       let targetMailbox = this.mailbox;
       try {
         const boxes = await this.imapClient!.listMailboxes();
-        console.log('[TriageAgent] Available mailboxes:', boxes);
-        if (!boxes.includes(targetMailbox)) {
+          if (!boxes.includes(targetMailbox)) {
           const inboxBox = boxes.find(b => b.toLowerCase() === 'inbox') ?? boxes[0] ?? 'INBOX';
-          console.log('[TriageAgent] Target mailbox not found, switching to:', inboxBox);
           targetMailbox = inboxBox;
         }
       } catch (err) {
-        console.warn('[TriageAgent] Failed to list mailboxes, using default:', err);
+        // Use default mailbox
       }
 
-      console.log('[TriageAgent] Searching mailbox:', targetMailbox);
       const headers: EmailHeader[] = await this.imapClient!.searchEmails(targetMailbox, this.maxEmails);
-      console.log('[TriageAgent] Found', headers.length, 'email headers');
 
       this.progressCallback?.('parsing', '正在解析邮件内容...');
       for (let i = 0; i < headers.length; i++) {
@@ -151,7 +147,7 @@ export class MailTriageAgent {
           const parsed = await parseEmailBuffer(rawBuffer, header);
           parsedEmails.push(parsed);
         } catch (err) {
-          console.error(`[MailMind] Failed to parse email ${i}:`, err);
+          // Skip failed email parse
         }
       }
     }
@@ -165,7 +161,7 @@ export class MailTriageAgent {
         insights = results.insights || [];
         usage = results.usage;
       } catch (llmErr: any) {
-        console.warn('[TriageAgent] LLM failed:', llmErr?.message || String(llmErr));
+        // LLM failed, use deterministic fallback
         insights = [];
       }
     }
@@ -230,7 +226,7 @@ export class MailTriageAgent {
           allFailed = false;
         }
       } catch (err) {
-        console.error(`[MailMind] LLM error for email ${i}:`, err);
+        // Skip LLM error for this email
       }
     }
     

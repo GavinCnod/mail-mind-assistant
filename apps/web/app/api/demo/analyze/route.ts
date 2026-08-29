@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     const validationResult = analyzeRequestSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'INVALID_REQUEST', message: 'Request validation failed', details: validationResult.error.flatten().fieldErrors },
+        { error: 'INVALID_REQUEST', message: 'Request validation failed' },
         { status: 400 },
       );
     }
@@ -97,7 +97,6 @@ export async function POST(request: Request) {
     return realModeStream(body.connection, body.password || '', serverLlm, locale, maxEmails);
 
   } catch (error) {
-    console.error('[MailMind] Analyze error:', error);
     return NextResponse.json(
       { error: 'INTERNAL_ERROR', message: '分析过程中发生错误' },
       { status: 500 },
@@ -266,7 +265,6 @@ async function realModeStream(
         controller.enqueue(encoder.encode(encodeSSE({ type: 'completed', insights: results.insights as any })));
 
       } catch (error) {
-        console.error('[API] Analysis error:', error);
         const errorCode = error instanceof Error ? error.message : 'UNKNOWN_ERROR';
         controller.enqueue(encoder.encode(encodeSSE({
           type: 'error',

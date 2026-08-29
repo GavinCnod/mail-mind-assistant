@@ -55,7 +55,6 @@ export async function POST(request: Request) {
       disposed: !!session,
     });
   } catch (error) {
-    console.error('Dispose API error:', error);
     return NextResponse.json(
       { error: 'INTERNAL_ERROR' },
       { status: 500 }

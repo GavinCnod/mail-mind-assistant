@@ -61,7 +61,6 @@ export async function parseEmailBuffer(
     };
   } catch (err) {
     // Fallback: use header only
-    console.error('[MailMind] Failed to parse email:', err);
     return {
       header,
       from: header.id,

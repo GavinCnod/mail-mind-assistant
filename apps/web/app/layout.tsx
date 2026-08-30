@@ -5,9 +5,14 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'MailMind - Read-only AI Inbox Triage',
-  description: 'Your Read-only AI Inbox Triage - Understand, Judge, Act without Send, Modify, or Retain',
+  description: '1st Place Winner of AgnesCode Build Challenge. Your Read-only AI Inbox Triage - Understand, Judge, Act without Send, Modify, or Retain',
   icons: {
     icon: '/favicon.png',
+  },
+  openGraph: {
+    title: 'MailMind - Read-only AI Inbox Triage',
+    description: '🏆 1st Place, AgnesCode Build Challenge. A read-only AI email triage assistant — understand, judge, act without send, modify, or retain.',
+    images: [{ url: '/images/agnesChallengeAward.png' }],
   },
 };
 

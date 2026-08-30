@@ -219,6 +219,18 @@ export default function LandingPage() {
           <div className="az-hero-inner">
             {/* Left: Editorial copy */}
             <div>
+              <div
+                ref={addReveal()}
+                className="meta-pill"
+                style={{
+                  borderColor: '#cba258',
+                  color: '#8a6d1f',
+                  background: 'rgba(203,162,88,0.12)',
+                  marginBottom: '16px',
+                }}
+              >
+                {t('landingExt.awardBadge')}
+              </div>
               <div className="az-eyebrow" ref={addReveal()}>{t('landingExt.heroEyebrow')}</div>
               <h1 className="az-headline" ref={addReveal()} dangerouslySetInnerHTML={{ __html: t('landingExt.heroHeadline') }} />
               <div className="az-body" ref={addReveal()}>

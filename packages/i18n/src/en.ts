@@ -193,6 +193,7 @@ export const en = {
   landingExt: {
     sideRailLeft: 'MailMind v0.1 · Read-Only · EST. 2026',
     sideRailRight: 'SECURE · PRIVATE · LOCAL-FIRST',
+    awardBadge: '🏆 1st Place · AgnesCode Build Challenge',
     heroEyebrow: 'Read-only AI · Inbox Triage',
     heroHeadline: 'Understand<br />your inbox,<br />never send<span style="color: var(--az-accent)">.</span>',
     sectionIIMeta: 'By the numbers · zero write operations · verified',
@@ -231,6 +232,13 @@ export const en = {
   about: {
     intro: 'MailMind is built by Gavin Chen (Leader of MindRose Team).',
     gavinBio: 'Gavin Chen leads product direction, technical implementation, and content strategy for this project, deploying and maintaining the product under the CI/CD system of MindRose team.',
+    award: {
+      meta: 'Award · AgnesCode Build Challenge',
+      title: '🏆 1st Place — AgnesCode Build Challenge',
+      desc: 'MailMind won 1st place in the AgnesCode Build Challenge, judged across five pillars: Problem & Purpose, Approach & Use of AgnesCode, Evidence it Works, Constraints & Honesty, and Creativity & Impact.',
+      comment: '"A read-only AI email triage assistant built with a genuine safety-first architecture. Clean design, a working IMAP/POP3 pipeline, prompt injection defenses, and full i18n support. A standout build."',
+      prize: 'Prize: AgnesCode Pro, 1 month ($100 value)',
+    },
     team: {
       title: 'The MindRose Team',
       desc: 'A group of engineers and strategists with multilingual and multidisciplinary backgrounds, dedicated to solving real business problems.',

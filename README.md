@@ -4,6 +4,15 @@
 
 MailMind helps busy professionals quickly understand and prioritize their email without the risk of accidental sends, deletions, or modifications.
 
+## 🏆 获奖 · Award
+
+**AgnesCode Build Challenge — 第 1 名 / 1st Place**
+
+> Read-only AI Inbox Triage · 安全优先架构 · Prompt Injection 防御 · 完整 i18n
+> 奖品：AgnesCode Pro，1 个月（价值 $100） · Prize: AgnesCode Pro, 1 month ($100 value)
+
+![AgnesCode Build Challenge Award](./apps/web/public/images/agnesChallengeAward.png)
+
 ## 功能特性
 
 - **只读设计**：永不发送、删除、移动或修改邮件
@@ -41,7 +50,9 @@ pnpm test:security
 
 ## 项目状态
 
-这是一个 4 天黑客松原型项目。核心功能（IMAP 连接、邮件分析）已在 Web 端实现，桌面端目前为 stub 状态。
+AgnesCode Build Challenge 冠军项目（第 1 名 / 1st Place），核心功能（IMAP 连接、邮件分析、提示注入防御、完整 i18n）已在 Web 端实现，桌面端目前为 stub 状态。
+
+评审五大维度：Problem & Purpose · Approach & Use of AgnesCode · Evidence it Works · Constraints & Honesty · Creativity & Impact
 
 ## 许可证
 

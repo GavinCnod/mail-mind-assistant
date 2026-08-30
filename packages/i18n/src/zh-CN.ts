@@ -193,6 +193,7 @@ export const zhCN = {
   landingExt: {
     sideRailLeft: 'MailMind v0.1 · 只读 · 创建于 2026',
     sideRailRight: '安全 · 隐私优先 · 本地优先',
+    awardBadge: '🏆 第一名 · AgnesCode Build Challenge',
     heroEyebrow: '只读 AI · 收件箱分诊',
     heroHeadline: '理解你的<br />收件箱，<br />绝不发送<span style="color: var(--az-accent)">。</span>',
     sectionIIMeta: '数据统计 · 零写入操作 · 已验证',
@@ -231,6 +232,13 @@ export const zhCN = {
   about: {
     intro: 'MailMind 由 Gavin Chen（MindRose 团队 Leader）构建。',
     gavinBio: 'Gavin Chen 负责这个项目的产品方向、技术实现与内容策略，在 MindRose 团队的 CI/CD 体系下完成产品部署和维护。',
+    award: {
+      meta: '获奖 · AgnesCode Build Challenge',
+      title: '🏆 第一名 — AgnesCode Build Challenge',
+      desc: 'MailMind 在 AgnesCode Build Challenge 中获得第一名。评审围绕五大维度展开：Problem & Purpose、Approach & Use of AgnesCode、Evidence it Works、Constraints & Honesty、Creativity & Impact。',
+      comment: '「一款基于真正安全优先架构构建的只读 AI 邮件分诊助手。设计干净、可用的 IMAP/POP3 管道、提示注入防御以及完整的 i18n 支持。出色的作品。」',
+      prize: '奖品：AgnesCode Pro，1 个月（价值 $100）',
+    },
     team: {
       title: 'MindRose 团队',
       desc: '一群多语言多技能背景的工程师与策略专家，致力于解决真实业务问题。',

@@ -187,6 +187,36 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── AWARD SECTION ── */}
+      <section style={{ padding: 'var(--az-section-y) 0' }}>
+        <div className="az-container">
+          <div className="sec-rule reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
+            <span className="roman">I·II.</span>
+            <span className="sec-meta">{t('about.award.meta')}</span>
+            <span className="page-count">Award</span>
+          </div>
+          <div className="reveal" ref={addReveal()} style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ background: 'var(--az-paper)', border: '1px solid #cba258', borderRadius: 'var(--radius-card)', padding: '40px', borderLeft: '3px solid #cba258' }}>
+              <h3 style={{ fontFamily: 'var(--az-font-display)', fontSize: '22px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--az-ink)', margin: '0 0 16px' }}>
+                {t('about.award.title')}
+              </h3>
+              <p style={{ fontFamily: 'var(--az-font-body)', fontSize: '14px', color: 'var(--az-ink-soft)', lineHeight: 1.8, margin: '0 0 16px' }}>
+                {t('about.award.desc')}
+              </p>
+              <blockquote style={{ margin: '0 0 16px', padding: '16px 20px', background: 'var(--az-paper-deep)', borderLeft: '3px solid var(--az-accent)', borderRadius: '8px', fontFamily: 'var(--az-font-body)', fontSize: '14px', color: 'var(--az-ink-muted)', fontStyle: 'italic', lineHeight: 1.7 }}>
+                {t('about.award.comment')}
+              </blockquote>
+              <p style={{ fontFamily: 'var(--az-font-mono)', fontSize: '11px', color: 'var(--az-ink-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 24px' }}>
+                {t('about.award.prize')}
+              </p>
+              <div style={{ marginTop: '8px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--az-rule)' }}>
+                <img src="/images/agnesChallengeAward.png" alt="AgnesCode Build Challenge Award" style={{ width: '100%', height: 'auto', display: 'block' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── TEAM SECTION ── */}
       <section style={{ padding: 'var(--az-section-y) 0', background: 'var(--az-paper-dark)' }}>
         <div className="az-container">

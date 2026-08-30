@@ -177,7 +177,8 @@ export type ErrorCode =
   | 'MODEL_UNAVAILABLE'
   | 'EMAIL_PARSE_FAILED'
   | 'SCHEMA_VALIDATION_FAILED'
-  | 'SESSION_DISPOSED';
+  | 'SESSION_DISPOSED'
+  | 'NO_EMAILS';
 
 export type LlmUsage = {
   promptTokens?: number;

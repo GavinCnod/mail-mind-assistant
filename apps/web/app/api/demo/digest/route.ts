@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const locale = body.uiPreference?.locale || 'zh-CN';
+    const locale = (body.uiPreference?.locale || 'zh-CN') as 'zh-CN' | 'en';
 
     // Use LLM for digest generation
     const llmConfig = {
@@ -89,7 +89,7 @@ ${emailList}
 - 结束：${new Date().toISOString()}`;
 }
 
-function generateMockDigest(body: any, locale: string): DigestReport {
+function generateMockDigest(body: any, locale: 'zh-CN' | 'en'): DigestReport {
   return {
     schemaVersion: '1.1',
     periodStart: body.windowStart || new Date().toISOString(),

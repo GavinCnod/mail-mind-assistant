@@ -10,6 +10,8 @@
     "test": "echo \"No tests configured\" && exit 0"
   },
   "dependencies": {
+    "@mailmind/contracts": "workspace:*",
+    "@mailmind/i18n": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

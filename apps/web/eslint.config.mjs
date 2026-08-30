@@ -1,7 +1,7 @@
-const next = require('@next/eslint-plugin-next');
-const tseslint = require('typescript-eslint');
+import next from '@next/eslint-plugin-next';
+import tseslint from 'typescript-eslint';
 
-module.exports = [
+export default [
   ...tseslint.configs.recommended,
   {
     plugins: {

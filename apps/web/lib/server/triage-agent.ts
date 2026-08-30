@@ -5,6 +5,7 @@
  * and returns structured insights.
  */
 import { type ConnectionConfig } from '@mailmind/contracts';
+import { emailInsightSchema } from '@mailmind/contracts';
 import { ImapClient, type EmailHeader } from './imap-client';
 import { Pop3Client } from './pop3-client';
 import { parseEmailBuffer, type ParsedEmail } from './mime-parser';
@@ -218,13 +219,31 @@ export class MailTriageAgent {
       const userPrompt = buildEmailPrompt(email.sanitizedExcerpt, email.from, email.subject, email.injectionRisk);
       try {
         const raw = await this.llm!.analyzeEmail({ systemPrompt, userPrompt, model: this.llm!.model });
+        // Parse and validate the LLM output against the strict EmailInsight schema.
+        // Untrusted model output must never reach the UI without schema enforcement.
+        let candidate: unknown;
         try {
-          insights.push(JSON.parse(raw));
-          allFailed = false;
+          candidate = JSON.parse(raw);
         } catch {
           insights.push(this._fallbackInsight(email, locale));
           allFailed = false;
+          continue;
         }
+
+        // The model prompt omits sourceEmailId; inject it before validation.
+        if (candidate && typeof candidate === 'object') {
+          (candidate as Record<string, unknown>).sourceEmailId =
+            (candidate as Record<string, unknown>).sourceEmailId ?? email.header.id;
+        }
+
+        const parsed = emailInsightSchema.safeParse(candidate);
+        if (parsed.success) {
+          insights.push(parsed.data);
+        } else {
+          // Schema validation failed → fall back to a safe deterministic insight
+          insights.push(this._fallbackInsight(email, locale));
+        }
+        allFailed = false;
       } catch (err) {
         // Skip LLM error for this email
       }

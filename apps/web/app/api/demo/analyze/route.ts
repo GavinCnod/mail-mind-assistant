@@ -69,9 +69,10 @@ export async function POST(request: Request) {
       return demoModeStream(locale, maxEmails);
     }
 
-    // Validate host for SSRF protection
-    const safe = await validateHost(body.connection.host);
-    if (!safe) {
+    // Validate host for SSRF protection (throws if host resolves to a private/local IP)
+    try {
+      await validateHost(body.connection.host);
+    } catch {
       return NextResponse.json(
         { error: 'SECURITY', message: 'Host validation failed - private IP addresses are not allowed' },
         { status: 403 },
@@ -117,7 +118,7 @@ async function demoModeStream(locale: string, maxEmails: number) {
       await sleep(300);
 
       for (let i = 0; i < FIXTURE_EMAILS.length && i < maxEmails; i++) {
-        sendProgress('parsing', `${locale === 'zh-CN' ? '解析' : 'Parsing'} ${i + 1}/${FIXTURE_EMAILS.length}...`;
+        sendProgress('parsing', `${locale === 'zh-CN' ? '解析' : 'Parsing'} ${i + 1}/${FIXTURE_EMAILS.length}...`);
         await sleep(200);
 
         const insight = FIXTURE_INSIGHTS[i];

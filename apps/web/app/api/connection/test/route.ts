@@ -30,9 +30,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate host for SSRF protection
-    const safe = await validateHost(body.host);
-    if (!safe) {
+    // Validate host for SSRF protection (throws if host resolves to a private/local IP)
+    try {
+      await validateHost(body.host);
+    } catch {
       return NextResponse.json(
         { error: 'SECURITY', message: 'Host validation failed - private IP addresses are not allowed' },
         { status: 403 }

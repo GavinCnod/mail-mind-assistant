@@ -9,6 +9,9 @@
     "typecheck": "tsc --noEmit",
     "test": "echo \"No tests configured\" && exit 0"
   },
+  "dependencies": {
+    "@mailmind/contracts": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^5.3.0"
   }

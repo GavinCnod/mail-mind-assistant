@@ -11,14 +11,15 @@
     "dev:web": "pnpm --filter @mailmind/web dev",
     "dev:desktop": "pnpm --filter @mailmind/desktop tauri dev",
     "build": "pnpm -r --workspace-concurrency=2 build",
-    "build:web": "pnpm --filter @mailmind/web build",
+    "build:web": "pnpm --filter @mailmind/contracts build && pnpm --filter @mailmind/i18n build && pnpm --filter @mailmind/ui build && pnpm --filter @mailmind/web build",
     "build:desktop": "pnpm --filter @mailmind/desktop tauri build",
+    "build:packages": "pnpm --filter @mailmind/contracts build && pnpm --filter @mailmind/i18n build && pnpm --filter @mailmind/ui build",
     "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm run build:packages && pnpm -r typecheck",
     "test": "pnpm -r test",
     "test:security": "node scripts/verify-no-write-mail-commands.mjs",
     "format": "prettier --write .",
-    "check": "pnpm typecheck && pnpm test && pnpm test:security"
+    "check": "pnpm run build:packages && pnpm typecheck && pnpm test && pnpm test:security"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.11.4",

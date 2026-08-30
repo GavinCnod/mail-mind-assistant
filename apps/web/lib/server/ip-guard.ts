@@ -3,10 +3,10 @@
  * Blocks loopback, private networks, link-local, and metadata IPs
  */
 
-import { resolve as dnsResolve } from 'dns';
+import { resolve4 as dnsResolve4 } from 'dns';
 import { promisify } from 'util';
 
-const dnsResolveAsync = promisify(dnsResolve);
+const dnsResolve4Async = promisify(dnsResolve4);
 
 // Simple private IP detection without external dependency
 const PRIVATE_IP_PATTERNS = [
@@ -43,7 +43,7 @@ export async function isSafeHost(host: string): Promise<boolean> {
 
   // For hostnames, resolve and check
   try {
-    const ips = await dnsResolveAsync(cleanHost, 'ipv4');
+    const ips = await dnsResolve4Async(cleanHost);
     // If any resolved IP is private, consider it unsafe
     return !ips.some((ip: string) => !isSafeIP(ip));
   } catch {

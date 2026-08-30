@@ -13,6 +13,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@mailmind/contracts": "workspace:*",
+    "@mailmind/i18n": "workspace:*",
+    "@mailmind/ui": "workspace:*",
+    "@mailmind/fixtures": "workspace:*",
     "imapflow": "^1.7.2",
     "mailparser": "^3.7.1",
     "next": "15.0.0",

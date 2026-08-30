@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useLocale } from '@mailmind/ui';
+import { useLocale, useTheme } from '@mailmind/ui';
 
 /* ─── Styled toggle components (same as other pages) ─── */
 function ThemeToggleStyled() {
-  const { theme, setTheme } = require('@mailmind/ui').useTheme();
+  const { theme, setTheme } = useTheme();
   const isDark = theme === 'dark';
   return (
     <button
@@ -55,7 +55,7 @@ function ThemeToggleStyled() {
 }
 
 function LocaleToggleStyled() {
-  const { locale, setLocale } = require('@mailmind/ui').useLocale();
+  const { locale, setLocale } = useLocale();
   const isZh = locale === 'zh-CN';
   return (
     <button

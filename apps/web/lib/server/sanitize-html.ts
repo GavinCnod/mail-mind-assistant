@@ -11,7 +11,7 @@ export function htmlToText(html: string): string {
   if (!html) return '';
 
   // Remove script and style elements
-  let text = html
+  const text = html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
     // Convert line breaks and paragraphs to newlines

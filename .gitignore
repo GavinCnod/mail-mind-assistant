@@ -16,7 +16,9 @@ node_modules/
 Thumbs.db
 
 # Env files
-.env.local
+.env
+.env.*
+!.env.example
 .env.production
 .env.*.local
 

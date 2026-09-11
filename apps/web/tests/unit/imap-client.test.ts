@@ -24,7 +24,7 @@ vi.mock('imapflow', () => {
 
 describe('ImapClient', () => {
   it('should create client with valid config', async () => {
-    const { ImapClient } = await import('../lib/server/imap-client');
+    const { ImapClient } = await import('../../lib/server/imap-client');
     const config = {
       protocol: 'imap' as const,
       host: 'imap.gmail.com',
@@ -38,7 +38,7 @@ describe('ImapClient', () => {
   });
 
   it('should connect and disconnect gracefully', async () => {
-    const { ImapClient } = await import('../lib/server/imap-client');
+    const { ImapClient } = await import('../../lib/server/imap-client');
     const config = {
       protocol: 'imap' as const,
       host: 'imap.gmail.com',
@@ -53,7 +53,7 @@ describe('ImapClient', () => {
   });
 
   it('should return empty array when no mailboxes exist', async () => {
-    const { ImapClient } = await import('../lib/server/imap-client');
+    const { ImapClient } = await import('../../lib/server/imap-client');
     const config = {
       protocol: 'imap' as const,
       host: 'imap.gmail.com',

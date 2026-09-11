@@ -1,11 +1,11 @@
 /**
  * Tests for POP3 client validation
  */
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
+import { Pop3Client } from '../../lib/server/pop3-client';
 
 describe('Pop3Client', () => {
   it('should throw error for non-SSL connections', () => {
-    const { Pop3Client } = require('../lib/server/pop3-client');
     const config = {
       protocol: 'pop3' as const,
       host: 'pop3.gmail.com',
@@ -14,11 +14,12 @@ describe('Pop3Client', () => {
       username: 'test@example.com',
     };
 
-    expect(() => new Pop3Client(config, 'password')).toThrow('POP3 only supports SSL encryption');
+    expect(() => new Pop3Client(config, 'password')).toThrow(
+      'POP3 only supports SSL encryption',
+    );
   });
 
   it('should create client with SSL config', () => {
-    const { Pop3Client } = require('../lib/server/pop3-client');
     const config = {
       protocol: 'pop3' as const,
       host: 'pop3.gmail.com',

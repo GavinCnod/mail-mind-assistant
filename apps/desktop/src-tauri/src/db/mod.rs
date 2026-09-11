@@ -11,7 +11,7 @@ pub mod insights;
 /// Initialize or open the SQLite database
 pub fn init_db(data_dir: &PathBuf) -> Result<Connection> {
     // Create data directory if it doesn't exist
-    if let Err(e) = fs::create_dir_all(data_dir) {
+    if let Err(_e) = fs::create_dir_all(data_dir) {
         return Err(rusqlite::Error::QueryReturnedNoRows);
     }
     

@@ -4,6 +4,7 @@ use super::{ConnectionConfig, ParsedEmail, MailboxInfo};
 
 /// IMAP client wrapper (placeholder for demo)
 pub struct ImapClient {
+    #[allow(dead_code)]
     config: ConnectionConfig,
 }
 

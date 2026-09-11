@@ -13,8 +13,8 @@ pub struct SetTriageRequest {
 /// Update triage state for an email
 #[tauri::command]
 pub fn set_triage_state(
-    state: State<'_, AppState>,
-    request: SetTriageRequest,
+    _state: State<'_, AppState>,
+    _request: SetTriageRequest,
 ) -> Result<(), String> {
     // TODO: Update local_triage table in SQLite
     Ok(())

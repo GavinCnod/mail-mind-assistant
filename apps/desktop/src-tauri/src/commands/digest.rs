@@ -22,8 +22,8 @@ pub struct DigestReport {
 /// Generate half-day digest report
 #[tauri::command]
 pub fn generate_digest(
-    state: State<'_, AppState>,
-    request: GenerateDigestRequest,
+    _state: State<'_, AppState>,
+    _request: GenerateDigestRequest,
 ) -> Result<DigestReport, String> {
     // TODO: Aggregate insights from database and generate digest
     Ok(DigestReport {

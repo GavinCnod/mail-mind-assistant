@@ -55,8 +55,8 @@ pub struct EmailCard {
 /// Sync emails from account (demo: returns placeholder)
 #[tauri::command]
 pub async fn sync_emails(
-    state: State<'_, AppState>,
-    request: SyncRequest,
+    _state: State<'_, AppState>,
+    _request: SyncRequest,
 ) -> Result<SyncResponse, String> {
     // TODO: Implement real IMAP/POP3 sync
     // For now, return demo response
@@ -73,8 +73,8 @@ pub fn query_feed(
     state: State<'_, AppState>,
     request: QueryFeedRequest,
 ) -> Result<serde_json::Value, String> {
-    let db_guard = state.db.lock().map_err(|e| e.to_string())?;
-    let conn = db_guard.as_ref()
+    let _db_guard = state.db.lock().map_err(|e| e.to_string())?;
+    let _conn = _db_guard.as_ref()
         .ok_or("Database not initialized")?;
     
     // TODO: Query emails table
@@ -90,8 +90,8 @@ pub fn query_feed(
 /// Get insight for a specific email
 #[tauri::command]
 pub fn get_insight(
-    state: State<'_, AppState>,
-    email_id: String,
+    _state: State<'_, AppState>,
+    _email_id: String,
 ) -> Result<Option<serde_json::Value>, String> {
     // TODO: Query insights table
     Ok(None)

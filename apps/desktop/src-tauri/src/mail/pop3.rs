@@ -4,6 +4,7 @@ use super::{ConnectionConfig, ParsedEmail};
 
 /// POP3 client wrapper
 pub struct Pop3Client {
+    #[allow(dead_code)]
     config: ConnectionConfig,
 }
 
@@ -19,12 +20,12 @@ impl Pop3Client {
     }
 
     /// List messages
-    pub async fn list_messages(&self, limit: usize) -> Result<Vec<ParsedEmail>, String> {
+    pub async fn list_messages(&self, _limit: usize) -> Result<Vec<ParsedEmail>, String> {
         Ok(vec![])
     }
 
     /// Fetch message by UID
-    pub async fn fetch_message(&self, uid: &str) -> Result<ParsedEmail, String> {
+    pub async fn fetch_message(&self, _uid: &str) -> Result<ParsedEmail, String> {
         Err("POP3 fetch not implemented in demo".to_string())
     }
 }

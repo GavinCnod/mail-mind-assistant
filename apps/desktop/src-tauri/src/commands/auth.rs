@@ -27,8 +27,8 @@ pub struct TestConnectionResponse {
 /// Test connection to email server (returns mailbox list)
 #[tauri::command]
 pub async fn test_connection(
-    state: State<'_, AppState>,
-    request: TestConnectionRequest,
+    _state: State<'_, AppState>,
+    _request: TestConnectionRequest,
 ) -> Result<TestConnectionResponse, String> {
     // For now, return simulated success
     // In production, this would connect to the actual IMAP/POP3 server

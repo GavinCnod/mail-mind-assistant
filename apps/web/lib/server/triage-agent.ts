@@ -41,14 +41,14 @@ export class MailTriageAgent {
     llmConfig?: { baseUrl: string; apiKey: string; model: string; timeoutMs?: number },
     options?: TriageOptions,
   ) {
-    this.protocol = (config as any).protocol || 'imap';
+    this.protocol = config.protocol || 'imap';
     this.maxEmails = options?.maxEmails ?? 10;
     this.mailbox = options?.mailbox ?? 'INBOX';
     this.locale = options?.locale ?? 'zh-CN';
     this.progressCallback = options?.progressCallback;
 
     if (this.protocol === 'pop3') {
-      this.pop3Client = new Pop3Client(config as any, password);
+      this.pop3Client = new Pop3Client(config, password);
     } else {
       this.imapClient = new ImapClient(config, password);
     }
@@ -121,7 +121,7 @@ export class MailTriageAgent {
           };
           const parsed = await parseEmailBuffer(rawBuffer, tempHeader);
           parsedEmails.push(parsed);
-        } catch (err) {
+        } catch {
           // Skip failed email fetch
         }
       }
@@ -133,7 +133,7 @@ export class MailTriageAgent {
           const inboxBox = boxes.find(b => b.toLowerCase() === 'inbox') ?? boxes[0] ?? 'INBOX';
           targetMailbox = inboxBox;
         }
-      } catch (err) {
+      } catch {
         // Use default mailbox
       }
 
@@ -147,7 +147,7 @@ export class MailTriageAgent {
           const rawBuffer = await this.imapClient!.fetchRawMessage(targetMailbox, header.uid);
           const parsed = await parseEmailBuffer(rawBuffer, header);
           parsedEmails.push(parsed);
-        } catch (err) {
+        } catch {
           // Skip failed email parse
         }
       }
@@ -161,7 +161,7 @@ export class MailTriageAgent {
         const results = await this._analyzeBatch(parsedEmails, systemPrompt, this.locale);
         insights = results.insights || [];
         usage = results.usage;
-      } catch (llmErr: any) {
+      } catch {
         // LLM failed, use deterministic fallback
         insights = [];
       }
@@ -244,7 +244,7 @@ export class MailTriageAgent {
           insights.push(this._fallbackInsight(email, locale));
         }
         allFailed = false;
-      } catch (err) {
+      } catch {
         // Skip LLM error for this email
       }
     }

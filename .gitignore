@@ -85,3 +85,8 @@ create_dirs.js
 start-server.ps1
 run-server.ps1
 watch-logs.ps1
+
+
+# One-off session artifacts
+MEMORY.md
+IMPLEMENTATION_PLAN.md
